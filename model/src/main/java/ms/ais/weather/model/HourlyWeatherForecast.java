@@ -7,5 +7,8 @@ public class HourlyWeatherForecast {
 
     private double avgTemperature;
     private String weatherConditions;
+    private long timestamp;
+
+
 
 }

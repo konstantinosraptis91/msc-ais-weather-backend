@@ -3,7 +3,7 @@ package ms.ais.weather.model;
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 10/1/2021.
  */
-public class DailyWeatherForecast extends HourlyWeatherForecast {
+public class DailyWeatherForecast {
 
     private double currentTemperature;
     private double maxTemperature;
@@ -12,6 +12,5 @@ public class DailyWeatherForecast extends HourlyWeatherForecast {
     private double humidityPercentage;
     private double windSpeed;
     private String windDirection;
-    private long timestamp;
 
 }

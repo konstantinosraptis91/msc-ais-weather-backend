@@ -1,5 +1,6 @@
 package ms.ais.weather.model.location;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
@@ -31,10 +32,12 @@ public class GeoPoint {
         return coordinates;
     }
 
+    @JsonIgnore
     public double getLongitude() {
         return coordinates.get(0);
     }
 
+    @JsonIgnore
     public double getLatitude() {
         return coordinates.get(1);
     }

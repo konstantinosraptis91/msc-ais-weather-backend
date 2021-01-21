@@ -9,6 +9,8 @@ import ms.ais.weather.model.HourlyWeatherForecast;
  */
 public interface WeatherDataRetriever {
 
+    CurrentWeatherForecast getCurrentWeatherForecast(String cityName);
+
     CurrentWeatherForecast getCurrentWeatherForecast();
 
     HourlyWeatherForecast getHourlyWeatherForecast();

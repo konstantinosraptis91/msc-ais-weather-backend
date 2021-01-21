@@ -23,11 +23,11 @@ public class OpenWeatherMapDataRetriever implements WeatherDataRetriever {
     private static final Logger LOGGER = Logger.getLogger(OpenWeatherMapDataRetriever.class.getName());
 
     @Override
-    public CurrentWeatherForecast getCurrentWeatherForecast() {
+    public CurrentWeatherForecast getCurrentWeatherForecast(String cityName) {
 
         GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.newInstance(
             OpenWeatherMapURI.builder()
-                .withCityName("Athens")
+                .withCityName(cityName)
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
                 .withWeatherForecastType(WeatherForecastType.CURRENT)
@@ -49,6 +49,11 @@ public class OpenWeatherMapDataRetriever implements WeatherDataRetriever {
         }
 
         return weatherForecast;
+    }
+
+    @Override
+    public CurrentWeatherForecast getCurrentWeatherForecast() {
+        return getCurrentWeatherForecast("Athens");
     }
 
     @Override

@@ -30,4 +30,41 @@ public class DailyWeatherConditionsImpl
     public double getRainProbability() {
         return rainProbability;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder extends WeatherConditions.Builder {
+
+        @Override
+        public Builder description(String description) {
+            super.description(description);
+            return this;
+        }
+
+        @Override
+        public Builder cloudPercentage(int cloudPercentage) {
+            super.cloudPercentage(cloudPercentage);
+            return this;
+        }
+
+        @Override
+        public Builder humidityPercentage(int humidityPercentage) {
+            super.humidityPercentage(humidityPercentage);
+            return this;
+        }
+
+        @Override
+        public Builder rainProbability(double rainProbability) {
+            super.rainProbability(rainProbability);
+            return this;
+        }
+
+        @Override
+        public DailyWeatherConditionsImpl build() {
+            return new DailyWeatherConditionsImpl(this);
+        }
+    }
+
 }

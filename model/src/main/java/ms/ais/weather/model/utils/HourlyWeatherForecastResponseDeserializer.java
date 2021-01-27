@@ -67,7 +67,7 @@ public class HourlyWeatherForecastResponseDeserializer extends JsonDeserializer<
         final JsonNode firstObject = weatherJsonArray.iterator().next();
         String description = firstObject.path("description").asText();
 
-        return WeatherConditions.builder()
+        return HourlyWeatherConditionsImpl.builder()
             .description(description)
             .build();
     }

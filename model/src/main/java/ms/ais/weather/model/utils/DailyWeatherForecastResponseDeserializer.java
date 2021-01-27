@@ -90,7 +90,7 @@ public class DailyWeatherForecastResponseDeserializer extends JsonDeserializer<D
         int humidityPercentage = dailyWeatherJson.path("humidity").asInt();
         int cloudPercentage = dailyWeatherJson.path("clouds").asInt();
 
-        return WeatherConditions.builder()
+        return DailyWeatherConditionsImpl.builder()
             .description(description)
             .rainProbability(rainProbability)
             .humidityPercentage(humidityPercentage)

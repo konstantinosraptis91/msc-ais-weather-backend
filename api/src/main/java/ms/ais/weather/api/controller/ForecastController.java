@@ -8,11 +8,27 @@ import ms.ais.weather.retriever.RetrieverFactory;
  */
 public class ForecastController {
 
-    public static Handler getCurrentWeatherForecast =
+    public static Handler getCurrentWeatherForecastResponse =
         ctx ->
             ctx.json(
                 RetrieverFactory.createWeatherDataRetriever()
-                    .getCurrentWeatherForecast(
+                    .getCurrentWeatherForecastResponse(
+                        ctx.pathParam("city")
+                    ));
+
+    public static Handler getHourlyWeatherForecastResponse =
+        ctx ->
+            ctx.json(
+                RetrieverFactory.createWeatherDataRetriever()
+                    .getHourlyWeatherForecastResponse(
+                        ctx.pathParam("city")
+                    ));
+
+    public static Handler getDailyWeatherForecastResponse =
+        ctx ->
+            ctx.json(
+                RetrieverFactory.createWeatherDataRetriever()
+                    .getDailyWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));
 

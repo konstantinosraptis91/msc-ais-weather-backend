@@ -1,59 +1,38 @@
 package ms.ais.weather.model.conditions;
 
 import ms.ais.weather.model.conditions.enums.ConditionsType;
+import ms.ais.weather.model.conditions.enums.WindDirection;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 11/1/2021.
  */
-public class WindConditions extends Conditions {
+public abstract class WindConditions extends Conditions {
 
-    private final double windSpeed;
-    private final double windDegrees;
+    protected final double windSpeed;
+    protected final WindDirection windDirection;
 
-    private WindConditions(Builder builder) {
+    protected WindConditions(Builder builder) {
         super(ConditionsType.WIND);
         this.windSpeed = builder.windSpeed;
-        this.windDegrees = builder.windDegrees;
+        this.windDirection = builder.windDirection;
     }
 
-    public double getWindSpeed() {
-        return windSpeed;
-    }
+    public abstract static class Builder {
 
-    public double getWindDegrees() {
-        return windDegrees;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-
-        private double windSpeed;
-        private double windDegrees;
+        protected double windSpeed;
+        protected WindDirection windDirection;
 
         public Builder windSpeed(double windSpeed) {
             this.windSpeed = windSpeed;
             return this;
         }
 
-        public Builder windDegrees(double windDegrees) {
-            this.windDegrees = windDegrees;
+        public Builder windDirection(WindDirection windDirection) {
+            this.windDirection = windDirection;
             return this;
         }
 
-        public WindConditions build() {
-            return new WindConditions(this);
-        }
-
+        abstract WindConditions build();
     }
 
-    @Override
-    public String toString() {
-        return "WindConditions{" +
-            "windSpeed=" + windSpeed +
-            ", windDegrees=" + windDegrees +
-            '}';
-    }
 }

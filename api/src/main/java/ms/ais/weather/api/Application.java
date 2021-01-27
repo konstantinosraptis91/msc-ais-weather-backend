@@ -14,15 +14,17 @@ public class Application {
         Javalin app = Javalin.create(JavalinConfig::enableCorsForAllOrigins)
             .start(ServerConfig.INSTANCE.getPort());
 
-        final String baseURL = "/ms/ais/api/weather";
+        final String baseURL = "/ms/ais/api/forecast";
 
         app.get(baseURL, ctx -> ctx.result("Server Is Up and Running..."));
-        app.get(baseURL + "/current/city/:city", ForecastController.getCurrentWeatherForecast);
-        // app.get(baseURL + "/daily/city/:city", );
-        // app.get(baseURL + "/hourly/city/:city", );
+        app.get(baseURL + "/current/city/:city", ForecastController.getCurrentWeatherForecastResponse);
+        app.get(baseURL + "/daily/city/:city", ForecastController.getDailyWeatherForecastResponse);
+        app.get(baseURL + "/hourly/city/:city", ForecastController.getHourlyWeatherForecastResponse);
 
-        JavalinJackson.configure(
-            new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        JavalinJackson.configure(mapper);
     }
 
 }

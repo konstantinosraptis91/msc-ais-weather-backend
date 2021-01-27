@@ -1,5 +1,6 @@
 package ms.ais.weather.model.conditions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ms.ais.weather.model.conditions.enums.ConditionsType;
 
 /**
@@ -7,6 +8,7 @@ import ms.ais.weather.model.conditions.enums.ConditionsType;
  */
 public abstract class Conditions {
 
+    @JsonIgnore
     protected ConditionsType type;
 
     protected Conditions(ConditionsType type) {

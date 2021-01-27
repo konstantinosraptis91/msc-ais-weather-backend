@@ -20,7 +20,7 @@ public class GetFromOpenWeatherMapTaskTest {
                 .withCityName("Athens")
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
-                .withWeatherForecastType(WeatherForecastType.CURRENT)
+                .withWeatherForecastType(WeatherForecastType.DAILY)
                 .build());
 
         // task.getOpenWeatherMapURI().printURI();

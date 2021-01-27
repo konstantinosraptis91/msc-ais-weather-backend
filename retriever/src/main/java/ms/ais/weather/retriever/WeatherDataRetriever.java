@@ -1,20 +1,17 @@
 package ms.ais.weather.retriever;
 
-import ms.ais.weather.model.CurrentWeatherForecast;
-import ms.ais.weather.model.DailyWeatherForecast;
-import ms.ais.weather.model.HourlyWeatherForecast;
+import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
+import ms.ais.weather.model.response.DailyWeatherForecastResponse;
+import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 19/1/2021.
  */
 public interface WeatherDataRetriever {
 
-    CurrentWeatherForecast getCurrentWeatherForecast(String cityName);
+    CurrentWeatherForecastResponse getCurrentWeatherForecastResponse(String cityName);
 
-    CurrentWeatherForecast getCurrentWeatherForecast();
+    HourlyWeatherForecastResponse getHourlyWeatherForecastResponse(String cityName);
 
-    HourlyWeatherForecast getHourlyWeatherForecast();
-
-    DailyWeatherForecast getDailyWeatherForecast();
-
+    DailyWeatherForecastResponse getDailyWeatherForecastResponse(String cityName);
 }

@@ -7,38 +7,28 @@ import ms.ais.weather.model.conditions.enums.ConditionsType;
  */
 public class WeatherConditions extends Conditions {
 
-    private final String main;
-    private final String description;
-    private final int cloudPercentage;
+    protected final String main;
+    protected final String description;
+    protected final int cloudPercentage;
+    protected final int humidityPercentage;
+    protected final double rainProbability;
 
-    private WeatherConditions(Builder builder) {
+    protected WeatherConditions(Builder builder) {
         super(ConditionsType.WEATHER);
         this.main = builder.main;
         this.description = builder.description;
         this.cloudPercentage = builder.cloudPercentage;
+        this.rainProbability = builder.rainProbability;
+        this.humidityPercentage = builder.humidityPercentage;
     }
 
-    public String getMain() {
-        return main;
-    }
+    public abstract static class Builder {
 
-    public String getDescription() {
-        return description;
-    }
-
-    public int getCloudPercentage() {
-        return cloudPercentage;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-
-        private String main;
-        private String description;
-        private int cloudPercentage;
+        protected String main;
+        protected String description;
+        protected int cloudPercentage;
+        protected int humidityPercentage;
+        protected double rainProbability;
 
         public Builder main(String main) {
             this.main = main;
@@ -55,18 +45,17 @@ public class WeatherConditions extends Conditions {
             return this;
         }
 
-        public WeatherConditions build() {
-            return new WeatherConditions(this);
+        public Builder humidityPercentage(int humidityPercentage) {
+            this.humidityPercentage = humidityPercentage;
+            return this;
         }
 
+        public Builder rainProbability(double rainProbability) {
+            this.rainProbability = rainProbability;
+            return this;
+        }
+
+        abstract WeatherConditions build();
     }
 
-    @Override
-    public String toString() {
-        return "WeatherConditions{" +
-            "main='" + main + '\'' +
-            ", description='" + description + '\'' +
-            ", cloudPercentage=" + cloudPercentage +
-            '}';
-    }
 }

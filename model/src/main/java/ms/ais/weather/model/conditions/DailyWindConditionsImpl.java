@@ -1,7 +1,5 @@
 package ms.ais.weather.model.conditions;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import ms.ais.weather.model.conditions.enums.WindDirection;
 
 /**

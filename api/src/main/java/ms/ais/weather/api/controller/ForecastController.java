@@ -1,7 +1,7 @@
 package ms.ais.weather.api.controller;
 
 import io.javalin.http.Handler;
-import ms.ais.weather.retriever.RetrieverFactory;
+import ms.ais.weather.service.ServiceFactory;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 21/1/2021.
@@ -11,7 +11,7 @@ public class ForecastController {
     public static Handler getCurrentWeatherForecastResponse =
         ctx ->
             ctx.json(
-                RetrieverFactory.createWeatherDataRetriever()
+                ServiceFactory.createWeatherDataRetriever()
                     .getCurrentWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));
@@ -19,7 +19,7 @@ public class ForecastController {
     public static Handler getHourlyWeatherForecastResponse =
         ctx ->
             ctx.json(
-                RetrieverFactory.createWeatherDataRetriever()
+                ServiceFactory.createWeatherDataRetriever()
                     .getHourlyWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));
@@ -27,7 +27,7 @@ public class ForecastController {
     public static Handler getDailyWeatherForecastResponse =
         ctx ->
             ctx.json(
-                RetrieverFactory.createWeatherDataRetriever()
+                ServiceFactory.createWeatherDataRetriever()
                     .getDailyWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));

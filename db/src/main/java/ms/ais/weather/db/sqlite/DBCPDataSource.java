@@ -1,6 +1,7 @@
 package ms.ais.weather.db.sqlite;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,7 +14,9 @@ public class DBCPDataSource {
     private static final BasicDataSource ds = new BasicDataSource();
 
     static {
-        ds.setUrl("jdbc:sqlite:C:/Users/konstantinos/sqlite/db/ms-ais-weather-schema.db");
+        // ds.setUrl("jdbc:sqlite:C:/Users/konstantinos/sqlite/db/ms-ais-weather-schema.db");
+        ds.setUrl("jdbc:sqlite:" + SystemUtils.getUserHome()
+                + "/Documents/SqliteDB/ms-ais-weather-schema.db");
         // ds.setUsername("");
         // ds.setPassword("");
         ds.setMinIdle(5);
@@ -21,7 +24,8 @@ public class DBCPDataSource {
         ds.setMaxOpenPreparedStatements(100);
     }
 
-    private DBCPDataSource() {}
+    private DBCPDataSource() {
+    }
 
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();

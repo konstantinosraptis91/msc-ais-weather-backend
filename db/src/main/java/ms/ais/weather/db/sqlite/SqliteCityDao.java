@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
@@ -83,4 +84,29 @@ public class SqliteCityDao implements CityDao {
         return cityList;
     }
 
+    @Override
+    public Optional<City> findByCityName(String name) throws SQLException {
+
+        final String query = "SELECT * FROM " + Table.CITY
+            + " WHERE " + Table.Column.CITY_NAME + "=" + "'" + name + "'";
+
+        City city = null;
+        Statement statement = DBCPDataSource.getConnection().createStatement();
+        try (ResultSet resultSet = statement.executeQuery(query)) {
+
+            if (resultSet.next()) {
+                city = City.builder()
+                    .cityId(resultSet.getInt(Table.Column.CITY_ID.name()))
+                    .cityGeoPoint(CityGeoPoint.builder()
+                        .withCityName(resultSet.getString(Table.Column.CITY_NAME.name()))
+                        .withLongitude(resultSet.getDouble(Table.Column.CITY_LONGITUDE.name()))
+                        .withLatitude(resultSet.getDouble(Table.Column.CITY_LATITUDE.name()))
+                        .build())
+                    .country(resultSet.getString(Table.Column.CITY_COUNTRY.name()))
+                    .build();
+            }
+        }
+
+        return Optional.ofNullable(city);
+    }
 }

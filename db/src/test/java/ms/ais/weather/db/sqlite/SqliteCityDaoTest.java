@@ -46,4 +46,12 @@ public class SqliteCityDaoTest {
         dao.findByUserId(1).forEach(System.out::println);
     }
 
+    @Test
+    public void testFindByCityName() throws Exception {
+
+        CityDao dao = DaoFactory.createCityDao();
+        dao.findByCityName("Athens")
+            .ifPresent(System.out::println);
+    }
+
 }

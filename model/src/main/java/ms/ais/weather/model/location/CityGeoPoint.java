@@ -53,7 +53,7 @@ public class CityGeoPoint extends GeoPoint {
     @Override
     public String toString() {
         return "CityGeoPoint{" +
-            "cityName=" + cityName +
+            "cityName='" + cityName + "'" +
             ", longitude=" + getLongitude() +
             ", latitude=" + getLatitude() +
             '}';

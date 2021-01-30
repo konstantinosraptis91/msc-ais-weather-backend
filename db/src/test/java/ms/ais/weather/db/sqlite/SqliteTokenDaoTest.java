@@ -28,7 +28,7 @@ public class SqliteTokenDaoTest {
         System.out.println("Insert token: " + dao.insertToken(token));
     }
 
-    @Disabled
+    // @Disabled
     @Test
     public void testFindTokenById() throws Exception {
 

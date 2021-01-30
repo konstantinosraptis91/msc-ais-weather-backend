@@ -3,6 +3,7 @@ package ms.ais.weather.db.sqlite;
 import ms.ais.weather.db.DaoFactory;
 import ms.ais.weather.db.TokenDao;
 import ms.ais.weather.model.db.Token;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
  */
 public class SqliteTokenDaoTest {
 
+    @Disabled
     @Test
     public void testInsertToken() throws Exception {
 
@@ -26,6 +28,7 @@ public class SqliteTokenDaoTest {
         System.out.println("Insert token: " + dao.insertToken(token));
     }
 
+    @Disabled
     @Test
     public void testFindTokenById() throws Exception {
 

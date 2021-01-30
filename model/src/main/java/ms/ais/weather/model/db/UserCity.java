@@ -1,4 +1,4 @@
-package ms.ais.weather.model.auth;
+package ms.ais.weather.model.db;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.

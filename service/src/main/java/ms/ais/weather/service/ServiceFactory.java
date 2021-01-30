@@ -5,7 +5,7 @@ package ms.ais.weather.service;
  */
 public class ServiceFactory {
 
-    public static WeatherService createWeatherDataRetriever() {
+    public static WeatherService createWeatherService() {
         return new OpenWeatherMapService();
     }
 

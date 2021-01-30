@@ -1,13 +1,15 @@
 package ms.ais.weather.db;
 
-import ms.ais.weather.model.auth.User;
+import ms.ais.weather.model.db.User;
+
+import java.sql.SQLException;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
  */
 public interface UserDao {
 
-    boolean insertUser(User user);
+    int insertUser(User user) throws SQLException;
 
     boolean deleteUserById(int id);
 

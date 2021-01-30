@@ -11,7 +11,7 @@ public class ForecastController {
     public static Handler getCurrentWeatherForecastResponse =
         ctx ->
             ctx.json(
-                ServiceFactory.createWeatherDataRetriever()
+                ServiceFactory.createWeatherService()
                     .getCurrentWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));
@@ -19,7 +19,7 @@ public class ForecastController {
     public static Handler getHourlyWeatherForecastResponse =
         ctx ->
             ctx.json(
-                ServiceFactory.createWeatherDataRetriever()
+                ServiceFactory.createWeatherService()
                     .getHourlyWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));
@@ -27,7 +27,7 @@ public class ForecastController {
     public static Handler getDailyWeatherForecastResponse =
         ctx ->
             ctx.json(
-                ServiceFactory.createWeatherDataRetriever()
+                ServiceFactory.createWeatherService()
                     .getDailyWeatherForecastResponse(
                         ctx.pathParam("city")
                     ));

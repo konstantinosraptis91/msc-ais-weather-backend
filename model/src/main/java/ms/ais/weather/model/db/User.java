@@ -1,4 +1,4 @@
-package ms.ais.weather.model.auth;
+package ms.ais.weather.model.db;
 
 import java.util.Arrays;
 
@@ -41,36 +41,11 @@ public class User {
         return password;
     }
 
-    public interface UserId {
-        UserFirstName userId(int id);
-    }
-
-    public interface UserFirstName {
-        UserLastName firstName(String firstName);
-    }
-
-    public interface UserLastName {
-        UserEmail lastName(String lastName);
-    }
-
-    public interface UserEmail {
-        UserPassword email(String email);
-    }
-
-    public interface UserPassword {
-        UserBuild password(char[] password);
-    }
-
-    public interface UserBuild {
-        User build();
-    }
-
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class Builder
-        implements UserId, UserFirstName, UserLastName, UserEmail, UserPassword, UserBuild {
+    public static class Builder {
 
         private int id;
         private String firstName;
@@ -78,37 +53,31 @@ public class User {
         private String email;
         private char[] password;
 
-        @Override
-        public UserFirstName userId(int id) {
+        public Builder userId(int id) {
             this.id = id;
             return this;
         }
 
-        @Override
-        public UserLastName firstName(String firstName) {
+        public Builder firstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        @Override
-        public UserEmail lastName(String lastName) {
+        public Builder lastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        @Override
-        public UserPassword email(String email) {
+        public Builder email(String email) {
             this.email = email;
             return this;
         }
 
-        @Override
-        public UserBuild password(char[] password) {
+        public Builder password(char[] password) {
             this.password = password;
             return this;
         }
 
-        @Override
         public User build() {
             return new User(this);
         }

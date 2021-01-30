@@ -1,4 +1,4 @@
-package ms.ais.weather.model.auth;
+package ms.ais.weather.model.db;
 
 import ms.ais.weather.model.location.CityGeoPoint;
 

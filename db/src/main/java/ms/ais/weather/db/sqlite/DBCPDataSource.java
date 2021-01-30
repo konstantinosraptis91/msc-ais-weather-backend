@@ -1,4 +1,4 @@
-package ms.ais.weather.db;
+package ms.ais.weather.db.sqlite;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 

@@ -1,5 +1,6 @@
-package ms.ais.weather.db;
+package ms.ais.weather.db.sqlite;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.Statement;
  */
 public class DBCPDataSourceTest {
 
+    @Disabled
     @Test
     public void testGetConnection() throws Exception {
 

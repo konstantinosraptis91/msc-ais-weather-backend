@@ -27,7 +27,6 @@ import java.util.NoSuchElementException;
  */
 public class OpenWeatherMapService implements WeatherService {
 
-    // private static final Logger LOGGER = Logger.getLogger(OpenWeatherMapService.class.getName());
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
 
     @Override
@@ -50,6 +49,7 @@ public class OpenWeatherMapService implements WeatherService {
 
         try {
             response = mapper.readValue(task.call(), CurrentWeatherForecastResponse.class);
+            // Insert city in db in case it is not already stored
             CityDao cityDao = DaoFactory.createCityDao();
             cityDao.insertCity(City.builder()
                 .cityGeoPoint(response.getCityGeoPoint())
@@ -59,7 +59,7 @@ public class OpenWeatherMapService implements WeatherService {
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (SQLException e) {
-            // LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return response;
@@ -68,7 +68,7 @@ public class OpenWeatherMapService implements WeatherService {
     @Override
     public HourlyWeatherForecastResponse getHourlyWeatherForecastResponse(String cityName) {
 
-        City city = findCity(cityName);
+        City city = findCityByNameOrThrowException(cityName);
 
         GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
@@ -92,6 +92,8 @@ public class OpenWeatherMapService implements WeatherService {
             LOGGER.error(e.getMessage(), e);
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
         }
 
         return response;
@@ -100,7 +102,7 @@ public class OpenWeatherMapService implements WeatherService {
     @Override
     public DailyWeatherForecastResponse getDailyWeatherForecastResponse(String cityName) {
 
-        City city = findCity(cityName);
+        City city = findCityByNameOrThrowException(cityName);
 
         GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
@@ -130,12 +132,14 @@ public class OpenWeatherMapService implements WeatherService {
             LOGGER.error(e.getMessage(), e);
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
         }
 
         return response;
     }
 
-    private City findCity(String name) {
+    private City findCityByNameOrThrowException(String name) {
         return ServiceFactory.createCityService()
             .findCityByName(name)
             .orElseThrow(() -> new NoSuchElementException(

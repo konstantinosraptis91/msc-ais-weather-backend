@@ -45,7 +45,7 @@ public class CityServiceImpl implements CityService {
                     .cityGeoPoint(cityGeoPoint)
                     .build();
 
-                cityDao.insertCity(city);
+                // cityDao.insertCity(city);
                 return Optional.of(city);
             }
 

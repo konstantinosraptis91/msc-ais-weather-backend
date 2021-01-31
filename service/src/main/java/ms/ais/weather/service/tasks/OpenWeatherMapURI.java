@@ -3,18 +3,18 @@ package ms.ais.weather.service.tasks;
 import ms.ais.weather.model.enums.WeatherForecastType;
 import ms.ais.weather.service.enums.UnitsType;
 import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 11/1/2021.
  */
 public class OpenWeatherMapURI {
 
-    private static final Logger LOGGER = Logger.getLogger(OpenWeatherMapURI.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapURI.class);
 
     private final double longitude;
     private final double latitude;
@@ -42,7 +42,7 @@ public class OpenWeatherMapURI {
         try {
             uri = uriBuilder.build();
         } catch (URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

@@ -1,20 +1,21 @@
 package ms.ais.weather.service.tasks;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 11/1/2021.
  */
 public class GetFromOpenWeatherMapTask implements Callable<String> {
 
-    private static final Logger LOGGER = Logger.getLogger(GetFromOpenWeatherMapTask.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(GetFromOpenWeatherMapTask.class);
 
     private final URI uri;
 
@@ -33,7 +34,7 @@ public class GetFromOpenWeatherMapTask implements Callable<String> {
     @Override
     public String call() throws IOException, InterruptedException {
 
-        LOGGER.log(Level.INFO, "GET task " + uri.toString() + " START");
+        LOGGER.info("GET task " + uri.toString() + " START");
         long startTime = System.currentTimeMillis();
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -48,8 +49,8 @@ public class GetFromOpenWeatherMapTask implements Callable<String> {
 
         long endTime = System.currentTimeMillis();
 
-        LOGGER.log(Level.INFO, "GET task " + uri.toString()
-            + " FINISH " + (endTime - startTime)
+        LOGGER.info("GET task " + uri.toString()
+            + " FINISH at " + (endTime - startTime)
             + " ms with status code " + httpResponse.statusCode());
 
         return httpResponse.body();

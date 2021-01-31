@@ -3,6 +3,8 @@ package ms.ais.weather.db.sqlite;
 import ms.ais.weather.db.CityDao;
 import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,8 @@ import java.util.Optional;
  */
 public class SqliteCityDao implements CityDao {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqliteCityDao.class);
+
     public enum Table {
         CITY;
 
@@ -27,6 +31,8 @@ public class SqliteCityDao implements CityDao {
 
     @Override
     public int insertCity(City city) throws SQLException {
+
+        LOGGER.debug("Inserting city: " + city.toString() + " to db...");
 
         final String query = "INSERT INTO " + Table.CITY
             + " ("
@@ -45,6 +51,12 @@ public class SqliteCityDao implements CityDao {
             preparedStatement.setDouble(3, city.getCityGeoPoint().getLatitude());
             preparedStatement.setString(4, city.getCountry());
             rowsAffected = preparedStatement.executeUpdate();
+        }
+
+        if (rowsAffected == 1) {
+            LOGGER.debug("City: " + city.toString() + " inserted successfully in db!!!");
+        } else {
+            LOGGER.debug("City: " + city.toString() + " failed to be inserted in db! (Possibly already stored)");
         }
 
         return rowsAffected;

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
  */
 public class OpenWeatherMapServiceTest {
 
+    @Disabled
     @Test
     public void testGetCurrentWeatherForecast() throws Exception {
 
@@ -29,7 +30,7 @@ public class OpenWeatherMapServiceTest {
     public void testGetHourlyWeatherForecastResponse() throws Exception {
 
         WeatherService dataRetriever = new OpenWeatherMapService();
-        HourlyWeatherForecastResponse response = dataRetriever.getHourlyWeatherForecastResponse("Athens");
+        HourlyWeatherForecastResponse response = dataRetriever.getHourlyWeatherForecastResponse("Paris");
 
         System.out.println(response.getCityGeoPoint());
 

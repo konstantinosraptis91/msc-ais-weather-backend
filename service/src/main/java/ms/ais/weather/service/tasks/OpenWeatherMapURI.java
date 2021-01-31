@@ -1,8 +1,6 @@
 package ms.ais.weather.service.tasks;
 
 import ms.ais.weather.model.enums.WeatherForecastType;
-import ms.ais.weather.model.location.CityGeoPoint;
-import ms.ais.weather.service.enums.CityGeoPointMap;
 import ms.ais.weather.service.enums.UnitsType;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -18,8 +16,9 @@ public class OpenWeatherMapURI {
 
     private static final Logger LOGGER = Logger.getLogger(OpenWeatherMapURI.class.getName());
 
-    private final CityGeoPoint cityGeoPoint;
-
+    private final double longitude;
+    private final double latitude;
+    private final String cityName;
     private final String key;
     private final UnitsType unitsType;
     private final WeatherForecastType weatherForecastType;
@@ -27,8 +26,9 @@ public class OpenWeatherMapURI {
     private URI uri;
 
     private OpenWeatherMapURI(Builder builder) {
-
-        this.cityGeoPoint = CityGeoPointMap.INSTANCE.getCityGeoPoint(builder.cityName).get();
+        this.cityName = builder.cityName;
+        this.longitude = builder.longitude;
+        this.latitude = builder.latitude;
         this.key = builder.key;
         this.unitsType = builder.unitsType;
         this.weatherForecastType = builder.weatherForecastType;
@@ -67,22 +67,22 @@ public class OpenWeatherMapURI {
         switch (weatherForecastType) {
 
             case CURRENT:
-                uriBuilder.setParameter("q", cityGeoPoint.getCityName())
+                uriBuilder.setParameter("q", cityName)
                     .setParameter("appid", key)
                     .setParameter("units", unitsType.getValue());
                 break;
 
             case DAILY:
-                uriBuilder.setParameter("lon", String.valueOf(cityGeoPoint.getLongitude()))
-                    .setParameter("lat", String.valueOf(cityGeoPoint.getLatitude()))
+                uriBuilder.setParameter("lon", String.valueOf(longitude))
+                    .setParameter("lat", String.valueOf(latitude))
                     .setParameter("exclude", "current,minutely,hourly,alerts")
                     .setParameter("appid", key)
                     .setParameter("units", unitsType.getValue());
                 break;
 
             case HOURLY:
-                uriBuilder.setParameter("lon", String.valueOf(cityGeoPoint.getLongitude()))
-                    .setParameter("lat", String.valueOf(cityGeoPoint.getLatitude()))
+                uriBuilder.setParameter("lon", String.valueOf(longitude))
+                    .setParameter("lat", String.valueOf(latitude))
                     .setParameter("exclude", "current,minutely,daily,alerts")
                     .setParameter("appid", key)
                     .setParameter("units", unitsType.getValue());
@@ -92,8 +92,28 @@ public class OpenWeatherMapURI {
 
     }
 
-    public CityGeoPoint getCityGeoPoint() {
-        return cityGeoPoint;
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public UnitsType getUnitsType() {
+        return unitsType;
+    }
+
+    public WeatherForecastType getWeatherForecastType() {
+        return weatherForecastType;
     }
 
     public URI getURI() {
@@ -107,12 +127,24 @@ public class OpenWeatherMapURI {
     public static class Builder {
 
         private String cityName;
+        private double longitude;
+        private double latitude;
         private String key;
         private UnitsType unitsType;
         private WeatherForecastType weatherForecastType;
 
         public Builder withCityName(String cityName) {
             this.cityName = cityName;
+            return this;
+        }
+
+        public Builder longitude(double longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+        public Builder latitude(double latitude) {
+            this.latitude = latitude;
             return this;
         }
 

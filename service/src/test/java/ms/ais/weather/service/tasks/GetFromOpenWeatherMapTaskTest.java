@@ -13,13 +13,13 @@ public class GetFromOpenWeatherMapTaskTest {
     @Test
     public void testCall() throws Exception {
 
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.newInstance(
+        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
                 .withCityName("Athens")
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
                 .withWeatherForecastType(WeatherForecastType.DAILY)
-                .build());
+                .build().getURI());
 
         // task.getOpenWeatherMapURI().printURI();
 

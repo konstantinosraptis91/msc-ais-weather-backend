@@ -1,6 +1,7 @@
 package ms.ais.weather.service.tasks;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -15,28 +16,28 @@ public class GetFromOpenWeatherMapTask implements Callable<String> {
 
     private static final Logger LOGGER = Logger.getLogger(GetFromOpenWeatherMapTask.class.getName());
 
-    private final OpenWeatherMapURI uri;
+    private final URI uri;
 
-    private GetFromOpenWeatherMapTask(OpenWeatherMapURI uri) {
+    private GetFromOpenWeatherMapTask(URI uri) {
         this.uri = uri;
     }
 
-    public static GetFromOpenWeatherMapTask newInstance(OpenWeatherMapURI uri) {
+    public static GetFromOpenWeatherMapTask createWithURI(URI uri) {
         return new GetFromOpenWeatherMapTask(uri);
     }
 
-    public OpenWeatherMapURI getOpenWeatherMapURI() {
+    public URI getURI() {
         return uri;
     }
 
     @Override
     public String call() throws IOException, InterruptedException {
 
-        LOGGER.log(Level.INFO, "GET task " + uri.getURI().toString() + " START");
+        LOGGER.log(Level.INFO, "GET task " + uri.toString() + " START");
         long startTime = System.currentTimeMillis();
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
-            .uri(uri.getURI())
+            .uri(uri)
             .header("Accept", "application/json")
             .GET()
             .build();
@@ -47,7 +48,7 @@ public class GetFromOpenWeatherMapTask implements Callable<String> {
 
         long endTime = System.currentTimeMillis();
 
-        LOGGER.log(Level.INFO, "GET task " + uri.getURI().toString()
+        LOGGER.log(Level.INFO, "GET task " + uri.toString()
             + " FINISH " + (endTime - startTime)
             + " ms with status code " + httpResponse.statusCode());
 

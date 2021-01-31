@@ -2,6 +2,9 @@ package ms.ais.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import ms.ais.weather.db.CityDao;
+import ms.ais.weather.db.DaoFactory;
+import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.enums.WeatherForecastType;
 import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
 import ms.ais.weather.model.response.DailyWeatherForecastResponse;
@@ -12,28 +15,31 @@ import ms.ais.weather.model.utils.HourlyWeatherForecastResponseDeserializer;
 import ms.ais.weather.service.enums.UnitsType;
 import ms.ais.weather.service.tasks.GetFromOpenWeatherMapTask;
 import ms.ais.weather.service.tasks.OpenWeatherMapURI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 19/1/2021.
  */
 public class OpenWeatherMapService implements WeatherService {
 
-    private static final Logger LOGGER = Logger.getLogger(OpenWeatherMapService.class.getName());
+    // private static final Logger LOGGER = Logger.getLogger(OpenWeatherMapService.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
 
     @Override
     public CurrentWeatherForecastResponse getCurrentWeatherForecastResponse(String cityName) {
 
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.newInstance(
+        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
                 .withCityName(cityName)
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
                 .withWeatherForecastType(WeatherForecastType.CURRENT)
-                .build());
+                .build().getURI());
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
@@ -44,10 +50,16 @@ public class OpenWeatherMapService implements WeatherService {
 
         try {
             response = mapper.readValue(task.call(), CurrentWeatherForecastResponse.class);
+            CityDao cityDao = DaoFactory.createCityDao();
+            cityDao.insertCity(City.builder()
+                .cityGeoPoint(response.getCityGeoPoint())
+                .build());
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
+        } catch (SQLException e) {
+            // LOGGER.error(e.getMessage(), e);
         }
 
         return response;
@@ -56,13 +68,16 @@ public class OpenWeatherMapService implements WeatherService {
     @Override
     public HourlyWeatherForecastResponse getHourlyWeatherForecastResponse(String cityName) {
 
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.newInstance(
+        City city = findCity(cityName);
+
+        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
-                .withCityName(cityName)
+                .longitude(city.getCityGeoPoint().getLongitude())
+                .latitude(city.getCityGeoPoint().getLatitude())
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
                 .withWeatherForecastType(WeatherForecastType.HOURLY)
-                .build());
+                .build().getURI());
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
@@ -74,9 +89,9 @@ public class OpenWeatherMapService implements WeatherService {
         try {
             response = mapper.readValue(task.call(), HourlyWeatherForecastResponse.class);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return response;
@@ -85,13 +100,16 @@ public class OpenWeatherMapService implements WeatherService {
     @Override
     public DailyWeatherForecastResponse getDailyWeatherForecastResponse(String cityName) {
 
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.newInstance(
+        City city = findCity(cityName);
+
+        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
-                .withCityName(cityName)
+                .longitude(city.getCityGeoPoint().getLongitude())
+                .latitude(city.getCityGeoPoint().getLatitude())
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
                 .withWeatherForecastType(WeatherForecastType.DAILY)
-                .build());
+                .build().getURI());
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
@@ -109,11 +127,18 @@ public class OpenWeatherMapService implements WeatherService {
         try {
             response = mapper.readValue(task.call(), DailyWeatherForecastResponse.class);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return response;
+    }
+
+    private City findCity(String name) {
+        return ServiceFactory.createCityService()
+            .findCityByName(name)
+            .orElseThrow(() -> new NoSuchElementException(
+                "Error... Cannot find city : " + name + " neither in db, nor in OpenWeatherMap API."));
     }
 }

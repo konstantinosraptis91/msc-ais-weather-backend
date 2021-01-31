@@ -4,7 +4,9 @@ import ms.ais.weather.db.UserDao;
 import ms.ais.weather.model.db.User;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
@@ -32,16 +34,33 @@ public class SqliteUserDao implements UserDao {
             + " VALUES (?, ?, ?, ?)";
 
         int rowsAffected;
+        int generatedKey = -1;
 
-        try (PreparedStatement preparedStatement = DBCPDataSource.getConnection().prepareStatement(query)) {
+        try (PreparedStatement preparedStatement =
+                 DBCPDataSource.getConnection()
+                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, String.valueOf(user.getPassword()));
             rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected != 1) {
+                throw new SQLException("rowsAffected: " + rowsAffected
+                    + "Failed to insert user: " + user.toString());
+            }
+
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+
+                if (resultSet.next()) {
+
+                    generatedKey = resultSet.getInt(1);
+                }
+            }
         }
 
-        return rowsAffected;
+        return generatedKey;
     }
 
     @Override

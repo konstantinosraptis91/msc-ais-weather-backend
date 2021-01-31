@@ -4,5 +4,6 @@ plugins {
 
 dependencies {
     implementation(project(":model"))
+    implementation(project(":db"))
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
 }

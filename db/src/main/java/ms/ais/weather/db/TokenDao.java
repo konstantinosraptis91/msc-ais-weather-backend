@@ -14,6 +14,8 @@ public interface TokenDao {
 
     Optional<Token> findTokenById(String id) throws SQLException;
 
-    int deleteTokenById(String id);
+    Optional<Token> findTokenByUserCredentials(String email, char[] password) throws SQLException;
+
+    int deleteTokenById(String id) throws SQLException;
 
 }

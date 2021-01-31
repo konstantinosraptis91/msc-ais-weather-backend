@@ -28,12 +28,20 @@ public class SqliteTokenDaoTest {
         System.out.println("Insert token: " + dao.insertToken(token));
     }
 
-    // @Disabled
+    @Disabled
     @Test
     public void testFindTokenById() throws Exception {
 
         TokenDao dao = DaoFactory.createTokenDao();
         System.out.println(dao.findTokenById("cd804bc0-b300-4401-99a8-194b8d4a8103"));
+    }
+
+    @Disabled
+    @Test
+    public void testDeleteTokenById() throws Exception {
+
+        TokenDao dao = DaoFactory.createTokenDao();
+        System.out.println("Delete token: " + dao.deleteTokenById("3c331cc2-23f1-4db9-96ad-aa3a23abdebc"));
     }
 
 }

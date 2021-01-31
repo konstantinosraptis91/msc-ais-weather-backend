@@ -14,9 +14,10 @@ public class DBCPDataSource {
     private static final BasicDataSource ds = new BasicDataSource();
 
     static {
-        // ds.setUrl("jdbc:sqlite:C:/Users/konstantinos/sqlite/db/ms-ais-weather-schema.db");
         ds.setUrl("jdbc:sqlite:" + SystemUtils.getUserHome()
-                + "/Documents/SqliteDB/ms-ais-weather-schema.db");
+            + "/sqlite/db/ms-ais-weather-schema.db");
+//        ds.setUrl("jdbc:sqlite:" + SystemUtils.getUserHome()
+//                + "/Documents/SqliteDB/ms-ais-weather-schema.db");
         // ds.setUsername("");
         // ds.setPassword("");
         ds.setMinIdle(5);

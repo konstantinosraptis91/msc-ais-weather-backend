@@ -46,6 +46,7 @@ public class SqliteCityDaoTest {
         dao.findByUserId(1).forEach(System.out::println);
     }
 
+    @Disabled
     @Test
     public void testFindByCityName() throws Exception {
 

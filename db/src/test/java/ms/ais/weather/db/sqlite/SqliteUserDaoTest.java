@@ -22,9 +22,9 @@ public class SqliteUserDaoTest {
 //            .build();
 
         User user = User.builder()
-            .firstName("Stavros")
-            .lastName("Labrinos")
-            .email("stalab@linux.gr")
+            .firstName("Nikos")
+            .lastName("Korobos")
+            .email("nkorobos@gmail.com")
             .password(new char[]{'a', 'b', 'c'})
             .build();
 

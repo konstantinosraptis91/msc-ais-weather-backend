@@ -1,6 +1,7 @@
 package ms.ais.weather.service;
 
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -23,6 +24,7 @@ public class OpenWeatherMapServiceTest {
 //            .forEach(System.out::println);
     }
 
+    @Disabled
     @Test
     public void testGetHourlyWeatherForecastResponse() throws Exception {
 

@@ -38,6 +38,10 @@ public class SqliteTokenDao implements TokenDao {
             preparedStatement.setString(1, token.getId());
             preparedStatement.setInt(2, token.getUserId());
             rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected != 1) {
+                throw new SQLException("Failed to insert token: " + token.toString());
+            }
         }
 
         return rowsAffected;
@@ -50,11 +54,31 @@ public class SqliteTokenDao implements TokenDao {
             + " FROM " + Table.TOKEN
             + " WHERE " + Table.Column.TOKEN_ID + "=" + "'" + id + "'";
 
+        return findTokenByQuery(query);
+    }
+
+    @Override
+    public Optional<Token> findTokenByUserCredentials(String email, char[] password) throws SQLException {
+
+        final String query = "SELECT tk." + Table.Column.TOKEN_ID + ","
+            + "tk." + Table.Column.USER_ID + ","
+            + "tk." + Table.Column.TOKEN_CREATED_TIMESTAMP
+            + " FROM " + Table.TOKEN + " tk INNER JOIN " + SqliteUserDao.Table.USER + " usr"
+            + " ON tk." + Table.Column.USER_ID + "=" + "usr." + SqliteUserDao.Table.Column.USER_ID
+            + " WHERE usr." + SqliteUserDao.Table.Column.USER_EMAIL + "=" + "'" + email + "'"
+            + " AND usr." + SqliteUserDao.Table.Column.USER_PASSWORD + "=" + "'" + String.valueOf(password) + "'";
+
+        return findTokenByQuery(query);
+    }
+
+    private Optional<Token> findTokenByQuery(String query) throws SQLException {
+
         Token token = null;
         Statement statement = DBCPDataSource.getConnection().createStatement();
         try (ResultSet resultSet = statement.executeQuery(query)) {
 
             if (resultSet.next()) {
+
                 token = Token.builder()
                     .tokenId(resultSet.getString(Table.Column.TOKEN_ID.name()))
                     .userId(resultSet.getInt(Table.Column.USER_ID.name()))
@@ -67,7 +91,18 @@ public class SqliteTokenDao implements TokenDao {
     }
 
     @Override
-    public int deleteTokenById(String id) {
-        return 0;
+    public int deleteTokenById(String id) throws SQLException {
+
+        final String query = "DELETE FROM " + Table.TOKEN
+            + " WHERE " + Table.Column.TOKEN_ID + "= ?";
+
+        int rowsAffected;
+
+        try (PreparedStatement preparedStatement = DBCPDataSource.getConnection().prepareStatement(query)) {
+            preparedStatement.setString(1, id);
+            rowsAffected = preparedStatement.executeUpdate();
+        }
+
+        return rowsAffected;
     }
 }

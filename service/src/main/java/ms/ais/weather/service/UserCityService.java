@@ -7,4 +7,5 @@ public interface UserCityService {
 
     boolean deleteUserCityByTokenId(String tokenId, int cityId);
 
+    boolean insertUserCityByTokenId(String tokenId, int cityId);
 }

@@ -13,4 +13,10 @@ public class UserCityServiceImpl implements UserCityService {
         UserCityDao userCityDao = DaoFactory.createUserCityDao();
         return userCityDao.deleteUserCityByTokenId(tokenId, cityId) == 1;
     }
+
+    @Override
+    public boolean insertUserCityByTokenId(String tokenId, int cityId) {
+        UserCityDao userCityDao = DaoFactory.createUserCityDao();
+        return userCityDao.insertUserCityByTokenId(tokenId, cityId) == 1;
+    }
 }

@@ -31,6 +31,7 @@ public class Application {
 
         app.get(baseURL + "/user/cities", CityController.getCitiesByUserTokenId);
         app.delete(baseURL + "/user/city", UserCityController.deleteUserCityByTokenId);
+        app.post(baseURL + "/user/city", UserCityController.insertUserCityByTokenId);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

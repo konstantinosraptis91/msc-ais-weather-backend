@@ -11,4 +11,5 @@ public interface UserCityDao {
 
     int deleteUserCityByTokenId(String tokenId, int cityId);
 
+    int insertUserCityByTokenId(String tokenId, int cityId);
 }

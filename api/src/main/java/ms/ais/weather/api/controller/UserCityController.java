@@ -23,4 +23,18 @@ public class UserCityController {
             }
         };
 
+    public static Handler insertUserCityByTokenId =
+        ctx -> {
+            boolean isInserted = ServiceFactory.createUserCityService()
+                .insertUserCityByTokenId(
+                    ctx.queryParam("tokenId"),
+                    ctx.queryParam("cityId", Integer.class).get());
+
+            if (isInserted) {
+                ctx.status(HttpStatus.OK_200);
+            } else {
+                ctx.status(HttpStatus.NOT_FOUND_404);
+            }
+        };
+
 }

@@ -9,4 +9,6 @@ public interface UserCityDao {
 
     int insertUserCity(int userId, int cityId) throws SQLException;
 
+    int deleteUserCityByTokenId(String tokenId, int cityId);
+
 }

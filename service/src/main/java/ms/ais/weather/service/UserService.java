@@ -14,4 +14,5 @@ public interface UserService {
     Optional<String> singIn(String email, char[] password);
 
     boolean signOut(String tokenId);
+
 }

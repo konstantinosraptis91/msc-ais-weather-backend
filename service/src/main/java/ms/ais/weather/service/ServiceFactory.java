@@ -21,4 +21,8 @@ public class ServiceFactory {
         return new CityServiceImpl();
     }
 
+    public static UserCityService createUserCityService() {
+        return new UserCityServiceImpl();
+    }
+
 }

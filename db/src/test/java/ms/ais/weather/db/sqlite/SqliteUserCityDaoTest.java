@@ -22,4 +22,11 @@ public class SqliteUserCityDaoTest {
         System.out.println("Insert UserCity: " + dao.insertUserCity(2, 8));
     }
 
+    @Test
+    public void testDeleteUserCityByTokenId() throws Exception {
+
+        UserCityDao userCityDao = DaoFactory.createUserCityDao();
+        System.out.println(userCityDao.deleteUserCityByTokenId("d4663bfc-ad58-4691-80a9-0f3da69d87ee", 5));
+    }
+
 }

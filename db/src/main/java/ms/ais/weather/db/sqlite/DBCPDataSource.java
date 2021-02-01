@@ -29,10 +29,6 @@ public class DBCPDataSource {
     private DBCPDataSource() {
     }
 
-    public static BasicDataSource getDataSource() {
-        return ds;
-    }
-
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }

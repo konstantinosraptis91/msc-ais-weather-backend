@@ -15,6 +15,8 @@ public interface CityDao {
 
     List<City> findByUserId(int id) throws SQLException;
 
+    List<City> findByUserTokenId(String tokenId);
+
     Optional<City> findByCityName(String name) throws SQLException;
 
 }

@@ -55,4 +55,12 @@ public class SqliteCityDaoTest {
             .ifPresent(System.out::println);
     }
 
+    @Test
+    public void testFindByTokenId() throws Exception {
+
+        CityDao dao = DaoFactory.createCityDao();
+        dao.findByUserTokenId("d4663bfc-ad58-4691-80a9-0f3da69d87ee")
+            .forEach(System.out::println);
+    }
+
 }

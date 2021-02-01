@@ -64,7 +64,6 @@ public class SqliteCityDao implements CityDao {
     @Override
     public List<City> findByUserId(int id) throws SQLException {
 
-        final List<City> cityList = new ArrayList<>();
         final String query = "SELECT ct." + Table.Column.CITY_ID + ","
             + "ct." + Table.Column.CITY_NAME + ","
             + "ct." + Table.Column.CITY_LONGITUDE + ","
@@ -74,26 +73,7 @@ public class SqliteCityDao implements CityDao {
             + "ON ct." + Table.Column.CITY_ID + "=" + "uct." + SqliteUserCityDao.Table.Column.CITY_ID
             + " WHERE uct." + SqliteUserCityDao.Table.Column.USER_ID + "=" + id;
 
-        try (Connection connection = DBCPDataSource.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-
-            while (resultSet.next()) {
-                City city = City.builder()
-                    .cityId(resultSet.getInt(Table.Column.CITY_ID.name()))
-                    .cityGeoPoint(CityGeoPoint.builder()
-                        .withCityName(resultSet.getString(Table.Column.CITY_NAME.name()))
-                        .withLongitude(resultSet.getDouble(Table.Column.CITY_LONGITUDE.name()))
-                        .withLatitude(resultSet.getDouble(Table.Column.CITY_LATITUDE.name()))
-                        .build())
-                    .country(resultSet.getString(Table.Column.CITY_COUNTRY.name()))
-                    .build();
-
-                cityList.add(city);
-            }
-        }
-
-        return cityList;
+        return findCitiesByQuery(query);
     }
 
     @Override
@@ -122,5 +102,46 @@ public class SqliteCityDao implements CityDao {
         }
 
         return Optional.ofNullable(city);
+    }
+
+    @Override
+    public List<City> findByUserTokenId(String tokenId) {
+
+        final String query = "SELECT "
+            + " ct.city_id, ct.city_name, ct.city_longitude, ct.city_latitude, ct.city_country"
+            + " FROM city ct"
+            + " INNER JOIN user_city uc ON ct.city_id = uc.city_id"
+            + " INNER JOIN user u ON uc.user_id = u.user_id"
+            + " INNER JOIN token t ON u.user_id = t.user_id"
+            + " WHERE t.token_id = '" + tokenId + "'";
+
+        return findCitiesByQuery(query);
+    }
+
+    private List<City> findCitiesByQuery(String query) {
+
+        final List<City> cityList = new ArrayList<>();
+
+        try (Connection connection = DBCPDataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                City city = City.builder()
+                    .cityId(resultSet.getInt(Table.Column.CITY_ID.name()))
+                    .cityGeoPoint(CityGeoPoint.builder()
+                        .withCityName(resultSet.getString(Table.Column.CITY_NAME.name()))
+                        .withLongitude(resultSet.getDouble(Table.Column.CITY_LONGITUDE.name()))
+                        .withLatitude(resultSet.getDouble(Table.Column.CITY_LATITUDE.name()))
+                        .build())
+                    .country(resultSet.getString(Table.Column.CITY_COUNTRY.name()))
+                    .build();
+                cityList.add(city);
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return cityList;
     }
 }

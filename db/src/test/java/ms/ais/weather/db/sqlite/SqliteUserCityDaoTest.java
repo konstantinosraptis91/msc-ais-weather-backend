@@ -15,8 +15,11 @@ public class SqliteUserCityDaoTest {
     public void testInsertUserCity() throws Exception {
 
         UserCityDao dao = DaoFactory.createUserCityDao();
-        System.out.println("Insert UserCity: " + dao.insertUserCity(1, 1));
-        System.out.println("Insert UserCity: " + dao.insertUserCity(1, 2));
+        System.out.println("Insert UserCity: " + dao.insertUserCity(2, 1));
+        System.out.println("Insert UserCity: " + dao.insertUserCity(2, 2));
+        System.out.println("Insert UserCity: " + dao.insertUserCity(2, 5));
+        System.out.println("Insert UserCity: " + dao.insertUserCity(2, 6));
+        System.out.println("Insert UserCity: " + dao.insertUserCity(2, 8));
     }
 
 }

@@ -3,7 +3,6 @@ package ms.ais.weather.service;
 import ms.ais.weather.db.CityDao;
 import ms.ais.weather.db.DaoFactory;
 import ms.ais.weather.model.db.City;
-import ms.ais.weather.model.location.CityGeoPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,8 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public List<City> findCitiesByTokenId(String id) {
-        return null;
+        CityDao cityDao = DaoFactory.createCityDao();
+        return cityDao.findByUserTokenId(id);
     }
 
     @Override

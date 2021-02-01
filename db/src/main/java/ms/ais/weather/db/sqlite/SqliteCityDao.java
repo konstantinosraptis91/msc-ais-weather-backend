@@ -6,10 +6,7 @@ import ms.ais.weather.model.location.CityGeoPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +42,9 @@ public class SqliteCityDao implements CityDao {
 
         int rowsAffected;
 
-        try (PreparedStatement preparedStatement = DBCPDataSource.getConnection().prepareStatement(query)) {
+        try (Connection connection = DBCPDataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setString(1, city.getCityGeoPoint().getCityName());
             preparedStatement.setDouble(2, city.getCityGeoPoint().getLongitude());
             preparedStatement.setDouble(3, city.getCityGeoPoint().getLatitude());
@@ -75,8 +74,9 @@ public class SqliteCityDao implements CityDao {
             + "ON ct." + Table.Column.CITY_ID + "=" + "uct." + SqliteUserCityDao.Table.Column.CITY_ID
             + " WHERE uct." + SqliteUserCityDao.Table.Column.USER_ID + "=" + id;
 
-        Statement statement = DBCPDataSource.getConnection().createStatement();
-        try (ResultSet resultSet = statement.executeQuery(query)) {
+        try (Connection connection = DBCPDataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
                 City city = City.builder()
@@ -103,8 +103,10 @@ public class SqliteCityDao implements CityDao {
             + " WHERE " + Table.Column.CITY_NAME + "=" + "'" + name + "'";
 
         City city = null;
-        Statement statement = DBCPDataSource.getConnection().createStatement();
-        try (ResultSet resultSet = statement.executeQuery(query)) {
+
+        try (Connection connection = DBCPDataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             if (resultSet.next()) {
                 city = City.builder()

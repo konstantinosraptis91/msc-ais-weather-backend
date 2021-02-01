@@ -32,4 +32,16 @@ public class SqliteUserDaoTest {
         System.out.println("Insert User: " + dao.insertUser(user));
     }
 
+    @Disabled
+    @Test
+    public void testFindUserByCredentials() throws Exception {
+
+        UserDao userDao = DaoFactory.createUserDao();
+
+        for (int i = 0; i < 10000; i++) {
+            System.out.println("User: " + i + " "
+                + userDao.findUserByCredentials("kraptis@test.com", new char[]{'a', 'b', 'c'}));
+        }
+    }
+
 }

@@ -3,10 +3,8 @@ package ms.ais.weather.db.sqlite;
 import ms.ais.weather.db.UserDao;
 import ms.ais.weather.model.db.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Optional;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
@@ -36,9 +34,9 @@ public class SqliteUserDao implements UserDao {
         int rowsAffected;
         int generatedKey = -1;
 
-        try (PreparedStatement preparedStatement =
-                 DBCPDataSource.getConnection()
-                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = DBCPDataSource.getConnection();
+             PreparedStatement preparedStatement = connection
+                 .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
@@ -71,5 +69,32 @@ public class SqliteUserDao implements UserDao {
     @Override
     public boolean findUserById(int id) {
         return false;
+    }
+
+    @Override
+    public Optional<User> findUserByCredentials(String email, char[] password) throws SQLException {
+
+        final String query = "SELECT * FROM " + Table.USER
+            + " WHERE " + Table.Column.USER_EMAIL + "='" + email + "'"
+            + " AND " + Table.Column.USER_PASSWORD + "='" + String.valueOf(password) + "'";
+
+        User user = null;
+
+        try (Connection connection = DBCPDataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            if (resultSet.next()) {
+                user = User.builder()
+                    .userId(resultSet.getInt("user_id"))
+                    .firstName(resultSet.getString("user_firstname"))
+                    .lastName(resultSet.getString("user_lastname"))
+                    .email(resultSet.getString("user_email"))
+                    .password(resultSet.getString("user_password").toCharArray())
+                    .build();
+            }
+        }
+
+        return Optional.ofNullable(user);
     }
 }

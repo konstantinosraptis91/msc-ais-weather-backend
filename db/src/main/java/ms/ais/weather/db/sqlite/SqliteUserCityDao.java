@@ -2,6 +2,7 @@ package ms.ais.weather.db.sqlite;
 
 import ms.ais.weather.db.UserCityDao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -30,7 +31,9 @@ public class SqliteUserCityDao implements UserCityDao {
 
         int rowsAffected;
 
-        try (PreparedStatement preparedStatement = DBCPDataSource.getConnection().prepareStatement(query)) {
+        try (Connection connection = DBCPDataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setInt(1, cityId);
             preparedStatement.setInt(2, userId);
             rowsAffected = preparedStatement.executeUpdate();

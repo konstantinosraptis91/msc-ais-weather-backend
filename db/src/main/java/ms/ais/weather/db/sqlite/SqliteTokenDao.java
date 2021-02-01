@@ -3,10 +3,7 @@ package ms.ais.weather.db.sqlite;
 import ms.ais.weather.db.TokenDao;
 import ms.ais.weather.model.db.Token;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Optional;
 
 /**
@@ -34,7 +31,9 @@ public class SqliteTokenDao implements TokenDao {
 
         int rowsAffected;
 
-        try (PreparedStatement preparedStatement = DBCPDataSource.getConnection().prepareStatement(query)) {
+        try (Connection connection = DBCPDataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setString(1, token.getId());
             preparedStatement.setInt(2, token.getUserId());
             rowsAffected = preparedStatement.executeUpdate();
@@ -74,8 +73,10 @@ public class SqliteTokenDao implements TokenDao {
     private Optional<Token> findTokenByQuery(String query) throws SQLException {
 
         Token token = null;
-        Statement statement = DBCPDataSource.getConnection().createStatement();
-        try (ResultSet resultSet = statement.executeQuery(query)) {
+
+        try (Connection connection = DBCPDataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             if (resultSet.next()) {
 
@@ -98,7 +99,9 @@ public class SqliteTokenDao implements TokenDao {
 
         int rowsAffected;
 
-        try (PreparedStatement preparedStatement = DBCPDataSource.getConnection().prepareStatement(query)) {
+        try (Connection connection = DBCPDataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setString(1, id);
             rowsAffected = preparedStatement.executeUpdate();
         }

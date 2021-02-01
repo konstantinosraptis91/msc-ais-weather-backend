@@ -50,20 +50,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<String> singIn(String email, char[] password) {
 
-        TokenDao tokenDao = DaoFactory.createTokenDao();
         String tokenId = null;
 
         try {
             LOGGER.debug("Trying to Sign in user with email: " + email + ", password: " + String.valueOf(password));
-            Optional<Token> oToken = tokenDao.findTokenByUserCredentials(email, password);
+            UserDao userDao = DaoFactory.createUserDao();
+            Optional<User> oUser = userDao.findUserByCredentials(email, password);
 
-            if (oToken.isPresent()) {
-                tokenId = oToken.get().getId();
+            if (oUser.isPresent()) {
+                TokenDao tokenDao = DaoFactory.createTokenDao();
+                Token token = Token.builder()
+                    .tokenId(UUID.randomUUID().toString())
+                    .userId(oUser.get().getId())
+                    .build();
+
+                tokenDao.insertToken(token);
+                tokenId = token.getId();
                 LOGGER.debug("User with email: " + email + ", password: " + String.valueOf(password)
                     + " signed in successfully!!!");
             } else {
-                throw new SQLException("Failed to signIn user with email: "
-                    + email + ", password: " + String.valueOf(password));
+                LOGGER.debug("Unable to find user with email: " + email + " and password: " + String.valueOf(password));
             }
 
         } catch (SQLException e) {

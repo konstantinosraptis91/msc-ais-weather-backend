@@ -22,10 +22,15 @@ public class DBCPDataSource {
         // ds.setPassword("");
         ds.setMinIdle(5);
         ds.setMaxIdle(10);
+        ds.setTimeBetweenEvictionRunsMillis(100);
         ds.setMaxOpenPreparedStatements(100);
     }
 
     private DBCPDataSource() {
+    }
+
+    public static BasicDataSource getDataSource() {
+        return ds;
     }
 
     public static Connection getConnection() throws SQLException {

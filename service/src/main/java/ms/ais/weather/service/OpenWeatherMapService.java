@@ -58,6 +58,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
         }
 
         return response;

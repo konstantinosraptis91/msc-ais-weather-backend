@@ -37,16 +37,8 @@ public class CityServiceImpl implements CityService {
                 LOGGER.debug("City with name: " + name + " not found in db."
                     + "Trying to get it from OpenWeatherMap and store it in db...");
 
-                WeatherService weatherService = ServiceFactory.createWeatherService();
-                CityGeoPoint cityGeoPoint = weatherService.getCurrentWeatherForecastResponse(name)
-                    .getCityGeoPoint();
-
-                City city = City.builder()
-                    .cityGeoPoint(cityGeoPoint)
-                    .build();
-
-                // cityDao.insertCity(city);
-                return Optional.of(city);
+                GeocodingService geocodingService = ServiceFactory.createGeocodingService();
+                return geocodingService.getCityByName(name);
             }
 
         } catch (SQLException e) {

@@ -9,6 +9,10 @@ public class ServiceFactory {
         return new OpenWeatherMapService();
     }
 
+    public static GeocodingService createGeocodingService() {
+        return new OpenWeatherMapService();
+    }
+
     public static UserService createUserService() {
         return new UserServiceImpl();
     }

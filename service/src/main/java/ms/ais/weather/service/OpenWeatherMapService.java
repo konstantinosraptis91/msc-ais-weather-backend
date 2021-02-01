@@ -11,30 +11,36 @@ import ms.ais.weather.model.response.DailyWeatherForecastResponse;
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
 import ms.ais.weather.model.utils.CurrentWeatherForecastResponseDeserializer;
 import ms.ais.weather.model.utils.DailyWeatherForecastResponseDeserializer;
+import ms.ais.weather.model.utils.GeocodingCityDeserializer;
 import ms.ais.weather.model.utils.HourlyWeatherForecastResponseDeserializer;
 import ms.ais.weather.service.enums.UnitsType;
 import ms.ais.weather.service.tasks.GetFromOpenWeatherMapTask;
 import ms.ais.weather.service.tasks.OpenWeatherMapURI;
+import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 19/1/2021.
  */
-public class OpenWeatherMapService implements WeatherService {
+public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
 
     @Override
     public CurrentWeatherForecastResponse getCurrentWeatherForecastResponse(String cityName) {
 
+        City city = findCityByNameOrThrowException(cityName);
+
         GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
             OpenWeatherMapURI.builder()
-                .withCityName(cityName)
+                .withCityName(city.getCityGeoPoint().getCityName())
                 .withKey("200681ee8b9be15aafc017130d88cd41")
                 .withUnitsType(UnitsType.METRIC)
                 .withWeatherForecastType(WeatherForecastType.CURRENT)
@@ -49,16 +55,8 @@ public class OpenWeatherMapService implements WeatherService {
 
         try {
             response = mapper.readValue(task.call(), CurrentWeatherForecastResponse.class);
-            // Insert city in db in case it is not already stored
-            CityDao cityDao = DaoFactory.createCityDao();
-            cityDao.insertCity(City.builder()
-                .cityGeoPoint(response.getCityGeoPoint())
-                .build());
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (SQLException e) {
+
+        } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         }
 
@@ -88,9 +86,7 @@ public class OpenWeatherMapService implements WeatherService {
 
         try {
             response = mapper.readValue(task.call(), HourlyWeatherForecastResponse.class);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (NoSuchElementException e) {
             LOGGER.error(e.getMessage());
@@ -128,15 +124,45 @@ public class OpenWeatherMapService implements WeatherService {
 
         try {
             response = mapper.readValue(task.call(), DailyWeatherForecastResponse.class);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (NoSuchElementException e) {
             LOGGER.error(e.getMessage());
         }
 
         return response;
+    }
+
+    @Override
+    public Optional<City> getCityByName(String name) {
+
+        City city = null;
+
+        try {
+            GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
+                new URIBuilder()
+                    .setScheme("https")
+                    .setHost("api.openweathermap.org/geo/1.0")
+                    .setPath("/direct")
+                    .setParameter("q", name)
+                    .setParameter("appid", "200681ee8b9be15aafc017130d88cd41")
+                    .setParameter("limit", "1").build());
+
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(City.class, new GeocodingCityDeserializer());
+            mapper.registerModule(module);
+
+            city = mapper.readValue(task.call(), City.class);
+
+            CityDao cityDao = DaoFactory.createCityDao();
+            cityDao.insertCity(city);
+
+        } catch (URISyntaxException | IOException | InterruptedException | SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return Optional.ofNullable(city);
     }
 
     private City findCityByNameOrThrowException(String name) {

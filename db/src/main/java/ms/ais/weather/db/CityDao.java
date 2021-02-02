@@ -2,7 +2,6 @@ package ms.ais.weather.db;
 
 import ms.ais.weather.model.db.City;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 

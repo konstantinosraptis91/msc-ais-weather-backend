@@ -1,6 +1,7 @@
 package ms.ais.weather.db.sqlite;
 
 import ms.ais.weather.db.CityDao;
+import ms.ais.weather.db.exception.DataException;
 import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 import org.slf4j.Logger;
@@ -41,26 +42,39 @@ public class SqliteCityDao implements CityDao {
             + " VALUES (?, ?, ?, ?)";
 
         int rowsAffected = -1;
+        int generatedKey = -1;
 
         try (Connection connection = DBCPDataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection
+                 .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, city.getCityGeoPoint().getCityName());
             preparedStatement.setDouble(2, city.getCityGeoPoint().getLongitude());
             preparedStatement.setDouble(3, city.getCityGeoPoint().getLatitude());
             preparedStatement.setString(4, city.getCountry());
             rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                LOGGER.debug("City: " + city.toString() + " inserted successfully in db!!!");
+            } else {
+                throw new DataException("City: " + city.toString()
+                    + " failed to be inserted in db! (Possibly already stored)");
+            }
+
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+
+                if (resultSet.next()) {
+                    generatedKey = resultSet.getInt(1);
+                }
+            }
+
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (DataException e) {
+            LOGGER.error(e.getMessage());
         }
 
-        if (rowsAffected == 1) {
-            LOGGER.debug("City: " + city.toString() + " inserted successfully in db!!!");
-        } else {
-            LOGGER.debug("City: " + city.toString() + " failed to be inserted in db! (Possibly already stored)");
-        }
-
-        return rowsAffected;
+        return generatedKey;
     }
 
     @Override
@@ -81,8 +95,10 @@ public class SqliteCityDao implements CityDao {
     @Override
     public Optional<City> findByCityName(String name) {
 
-        final String query = "SELECT * FROM " + Table.CITY
-            + " WHERE " + Table.Column.CITY_NAME + "=" + "'" + name + "'";
+        final String query = "SELECT"
+            + " ct.city_id, ct.city_name, ct.city_longitude, ct.city_latitude, ct.city_country"
+            + " FROM city ct LEFT JOIN alias a ON ct.city_id = a.city_id"
+            + " WHERE ct.city_name = '" + name + "' OR a.alias_name = '" + name + "'";
 
         City city = null;
 

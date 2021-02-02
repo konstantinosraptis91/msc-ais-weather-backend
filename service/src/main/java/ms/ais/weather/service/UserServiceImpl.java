@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("Trying to Sign up user: " + user.toString());
 
         int userId = userDao.insertUser(user);
-        if (userId == -1) {
+        if (userId != -1) {
             LOGGER.debug("User: " + user.toString() + " inserted successfully!!! User id: " + userId);
 
             TokenDao tokenDao = DaoFactory.createTokenDao();

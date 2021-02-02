@@ -2,6 +2,7 @@ package ms.ais.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import ms.ais.weather.db.AliasDao;
 import ms.ais.weather.db.CityDao;
 import ms.ais.weather.db.DaoFactory;
 import ms.ais.weather.model.db.City;
@@ -193,9 +194,26 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             city = mapper.readValue(task.call(), City.class);
 
             CityDao cityDao = DaoFactory.createCityDao();
-            cityDao.insertCity(city);
+            int generatedKey = cityDao.insertCity(city);
+            int cityId;
 
+            if (generatedKey != -1) {
+                cityId = generatedKey;
+            } else {
+                cityId = cityDao.findByCityName(city.getCityGeoPoint().getCityName())
+                    .orElseThrow(() -> new NoSuchElementException("Throwing from here")).getId();
+            }
+
+            // If city name taken from API not equal with given name, create an alias
+            if (!city.getCityGeoPoint().getCityName().equals(name)) {
+                LOGGER.debug("Adding an alias for " + city.getCityGeoPoint().getCityName() + " -> " + name);
+                AliasDao aliasDao = DaoFactory.createAliasDao();
+                aliasDao.insertAlias(cityId, name);
+            }
         } catch (URISyntaxException | IOException | InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (NoSuchElementException e) {
+            // LOGGER.error("Cannot find a city for given name: " + name);
             LOGGER.error(e.getMessage(), e);
         }
 
@@ -214,8 +232,10 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         } else {
             LOGGER.debug("Not found in cache, performing a call to openWeatherMap API!");
             jsonString = task.call();
-            LOGGER.debug("Storing: [" + jsonString + "] in cache.");
+            // LOGGER.debug("Storing: [" + jsonString + "] in cache.");
+            LOGGER.debug("Storing.. result in cache.");
             OpenWeatherMapCache.INSTANCE.getCache().put(task.getURI().toString(), jsonString);
+            LOGGER.debug("Result stored successfully in cache!!!");
         }
 
         return jsonString;

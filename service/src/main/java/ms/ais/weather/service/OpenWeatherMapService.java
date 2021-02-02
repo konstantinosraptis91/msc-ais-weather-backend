@@ -13,6 +13,7 @@ import ms.ais.weather.model.utils.CurrentWeatherForecastResponseDeserializer;
 import ms.ais.weather.model.utils.DailyWeatherForecastResponseDeserializer;
 import ms.ais.weather.model.utils.GeocodingCityDeserializer;
 import ms.ais.weather.model.utils.HourlyWeatherForecastResponseDeserializer;
+import ms.ais.weather.service.cache.OpenWeatherMapCache;
 import ms.ais.weather.service.enums.UnitsType;
 import ms.ais.weather.service.tasks.GetFromOpenWeatherMapTask;
 import ms.ais.weather.service.tasks.OpenWeatherMapURI;
@@ -61,7 +62,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         CurrentWeatherForecastResponse response = null;
 
         try {
-            response = mapper.readValue(task.call(), CurrentWeatherForecastResponse.class);
+            String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
+            response = mapper.readValue(jsonString, CurrentWeatherForecastResponse.class);
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -102,7 +104,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         HourlyWeatherForecastResponse response = null;
 
         try {
-            response = mapper.readValue(task.call(), HourlyWeatherForecastResponse.class);
+            String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
+            response = mapper.readValue(jsonString, HourlyWeatherForecastResponse.class);
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (NoSuchElementException e) {
@@ -150,7 +153,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         DailyWeatherForecastResponse response = null;
 
         try {
-            response = mapper.readValue(task.call(), DailyWeatherForecastResponse.class);
+            String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
+            response = mapper.readValue(jsonString, DailyWeatherForecastResponse.class);
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (NoSuchElementException e) {
@@ -196,6 +200,25 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         }
 
         return Optional.ofNullable(city);
+    }
+
+
+    private String getJsonStringFromCacheOrPerformAPICall(GetFromOpenWeatherMapTask task)
+        throws IOException, InterruptedException {
+
+        String jsonString;
+
+        if (OpenWeatherMapCache.INSTANCE.getCache().containsKey(task.getURI().toString())) {
+            LOGGER.debug("Found and serving from cache!");
+            jsonString = OpenWeatherMapCache.INSTANCE.getCache().get(task.getURI().toString());
+        } else {
+            LOGGER.debug("Not found in cache, performing a call to openWeatherMap API!");
+            jsonString = task.call();
+            LOGGER.debug("Storing: [" + jsonString + "] in cache.");
+            OpenWeatherMapCache.INSTANCE.getCache().put(task.getURI().toString(), jsonString);
+        }
+
+        return jsonString;
     }
 
     /**

@@ -24,8 +24,8 @@ public class GeocodingCityDeserializer extends JsonDeserializer<City> {
         final JsonNode cityGeocodingRootArray = mapper.readTree(jsonParser);
         final JsonNode firstCityJsonObject = cityGeocodingRootArray.iterator().next();
 
-        final String name = firstCityJsonObject.path("name").asText();
-        final String country = firstCityJsonObject.path("country").asText();
+        final String name = firstCityJsonObject.path("local_names").path("en").asText();
+        final String country2ACode = firstCityJsonObject.path("country").asText();
         final double longitude = firstCityJsonObject.path("lon").asDouble();
         final double latitude = firstCityJsonObject.path("lat").asDouble();
 
@@ -35,7 +35,7 @@ public class GeocodingCityDeserializer extends JsonDeserializer<City> {
                 .withLongitude(longitude)
                 .withLatitude(latitude)
                 .build())
-            .country(country)
+            .country(CodelistsOfBiMap.COUNTRY_CODE_MAP.getValueForId(country2ACode))
             .build();
     }
 }

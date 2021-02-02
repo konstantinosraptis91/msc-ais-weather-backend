@@ -11,12 +11,12 @@ import java.util.Optional;
  */
 public interface CityDao {
 
-    int insertCity(City city) throws SQLException;
+    int insertCity(City city);
 
-    List<City> findByUserId(int id) throws SQLException;
+    List<City> findByUserId(int id);
 
     List<City> findByUserTokenId(String tokenId);
 
-    Optional<City> findByCityName(String name) throws SQLException;
+    Optional<City> findByCityName(String name);
 
 }

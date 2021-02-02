@@ -17,34 +17,31 @@ public class CityServiceImpl implements CityService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CityServiceImpl.class);
 
+    /**
+     * Find all user cities by given token id.
+     *
+     * @param id The token id
+     * @return The cities
+     */
     @Override
     public List<City> findCitiesByTokenId(String id) {
         CityDao cityDao = DaoFactory.createCityDao();
         return cityDao.findByUserTokenId(id);
     }
 
+    /**
+     * Find a city by given name in db or get it from geocoding API and store it in db.
+     *
+     * @param name The city name
+     * @return The city
+     */
     @Override
     public Optional<City> findCityByName(String name) {
-
-        CityDao cityDao = DaoFactory.createCityDao();
-
-        try {
-            Optional<City> oCity = cityDao.findByCityName(name);
-            if (oCity.isPresent()) {
-                LOGGER.debug("City with name: " + name + " found in db.");
-                return oCity;
-            } else {
+        return DaoFactory.createCityDao().findByCityName(name)
+            .or(() -> {
                 LOGGER.debug("City with name: " + name + " not found in db."
                     + "Trying to get it from OpenWeatherMap and store it in db...");
-
-                GeocodingService geocodingService = ServiceFactory.createGeocodingService();
-                return geocodingService.getCityByName(name);
-            }
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return Optional.empty();
+                return ServiceFactory.createGeocodingService().getCityByName(name);
+            });
     }
 }

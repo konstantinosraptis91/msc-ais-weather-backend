@@ -2,6 +2,8 @@ package ms.ais.weather.db.sqlite;
 
 import ms.ais.weather.db.TokenDao;
 import ms.ais.weather.model.db.Token;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.Optional;
@@ -10,6 +12,8 @@ import java.util.Optional;
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 30/1/2021.
  */
 public class SqliteTokenDao implements TokenDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqliteTokenDao.class);
 
     public enum Table {
         TOKEN;
@@ -20,7 +24,7 @@ public class SqliteTokenDao implements TokenDao {
     }
 
     @Override
-    public int insertToken(Token token) throws SQLException {
+    public int insertToken(Token token) {
 
         final String query = "INSERT INTO " + Table.TOKEN
             + " ("
@@ -29,7 +33,7 @@ public class SqliteTokenDao implements TokenDao {
             + ")"
             + " VALUES (?,?)";
 
-        int rowsAffected;
+        int rowsAffected = -1;
 
         try (Connection connection = DBCPDataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -41,13 +45,15 @@ public class SqliteTokenDao implements TokenDao {
             if (rowsAffected != 1) {
                 throw new SQLException("Failed to insert token: " + token.toString());
             }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return rowsAffected;
     }
 
     @Override
-    public Optional<Token> findTokenById(String id) throws SQLException {
+    public Optional<Token> findTokenById(String id) {
 
         final String query = "SELECT *"
             + " FROM " + Table.TOKEN
@@ -57,7 +63,7 @@ public class SqliteTokenDao implements TokenDao {
     }
 
     @Override
-    public Optional<Token> findTokenByUserCredentials(String email, char[] password) throws SQLException {
+    public Optional<Token> findTokenByUserCredentials(String email, char[] password) {
 
         final String query = "SELECT tk." + Table.Column.TOKEN_ID + ","
             + "tk." + Table.Column.USER_ID + ","
@@ -70,7 +76,7 @@ public class SqliteTokenDao implements TokenDao {
         return findTokenByQuery(query);
     }
 
-    private Optional<Token> findTokenByQuery(String query) throws SQLException {
+    private Optional<Token> findTokenByQuery(String query) {
 
         Token token = null;
 
@@ -86,24 +92,28 @@ public class SqliteTokenDao implements TokenDao {
                     .createdTimestamp(resultSet.getLong(Table.Column.TOKEN_CREATED_TIMESTAMP.name()))
                     .build();
             }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return Optional.ofNullable(token);
     }
 
     @Override
-    public int deleteTokenById(String id) throws SQLException {
+    public int deleteTokenById(String id) {
 
         final String query = "DELETE FROM " + Table.TOKEN
             + " WHERE " + Table.Column.TOKEN_ID + "= ?";
 
-        int rowsAffected;
+        int rowsAffected = -1;
 
         try (Connection connection = DBCPDataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, id);
             rowsAffected = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return rowsAffected;

@@ -7,7 +7,7 @@ import java.sql.SQLException;
  */
 public interface UserCityDao {
 
-    int insertUserCity(int userId, int cityId) throws SQLException;
+    int insertUserCity(int userId, int cityId);
 
     int deleteUserCityByTokenId(String tokenId, int cityId);
 

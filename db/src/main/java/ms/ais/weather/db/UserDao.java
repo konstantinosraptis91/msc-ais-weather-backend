@@ -10,11 +10,11 @@ import java.util.Optional;
  */
 public interface UserDao {
 
-    int insertUser(User user) throws SQLException;
+    int insertUser(User user);
 
     boolean deleteUserById(int id);
 
     boolean findUserById(int id);
 
-    Optional<User> findUserByCredentials(String email, char[] password) throws SQLException;
+    Optional<User> findUserByCredentials(String email, char[] password);
 }

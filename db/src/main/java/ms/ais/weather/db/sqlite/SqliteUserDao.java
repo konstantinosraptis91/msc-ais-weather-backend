@@ -2,6 +2,8 @@ package ms.ais.weather.db.sqlite;
 
 import ms.ais.weather.db.UserDao;
 import ms.ais.weather.model.db.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.Optional;
@@ -10,6 +12,8 @@ import java.util.Optional;
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
  */
 public class SqliteUserDao implements UserDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqliteUserDao.class);
 
     public enum Table {
         USER;
@@ -20,7 +24,7 @@ public class SqliteUserDao implements UserDao {
     }
 
     @Override
-    public int insertUser(User user) throws SQLException {
+    public int insertUser(User user) {
 
         final String query = "INSERT INTO " + Table.USER
             + " ("
@@ -52,10 +56,11 @@ public class SqliteUserDao implements UserDao {
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
 
                 if (resultSet.next()) {
-
                     generatedKey = resultSet.getInt(1);
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return generatedKey;
@@ -72,7 +77,7 @@ public class SqliteUserDao implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByCredentials(String email, char[] password) throws SQLException {
+    public Optional<User> findUserByCredentials(String email, char[] password) {
 
         final String query = "SELECT * FROM " + Table.USER
             + " WHERE " + Table.Column.USER_EMAIL + "='" + email + "'"
@@ -93,6 +98,8 @@ public class SqliteUserDao implements UserDao {
                     .password(resultSet.getString("user_password").toCharArray())
                     .build();
             }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return Optional.ofNullable(user);

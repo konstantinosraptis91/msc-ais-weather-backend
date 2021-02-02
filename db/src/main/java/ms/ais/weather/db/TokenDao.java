@@ -10,12 +10,12 @@ import java.util.Optional;
  */
 public interface TokenDao {
 
-    int insertToken(Token token) throws SQLException;
+    int insertToken(Token token);
 
-    Optional<Token> findTokenById(String id) throws SQLException;
+    Optional<Token> findTokenById(String id);
 
-    Optional<Token> findTokenByUserCredentials(String email, char[] password) throws SQLException;
+    Optional<Token> findTokenByUserCredentials(String email, char[] password);
 
-    int deleteTokenById(String id) throws SQLException;
+    int deleteTokenById(String id);
 
 }

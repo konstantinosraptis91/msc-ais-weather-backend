@@ -27,7 +27,7 @@ public class SqliteCityDao implements CityDao {
     }
 
     @Override
-    public int insertCity(City city) throws SQLException {
+    public int insertCity(City city) {
 
         LOGGER.debug("Inserting city: " + city.toString() + " to db...");
 
@@ -40,7 +40,7 @@ public class SqliteCityDao implements CityDao {
             + ")"
             + " VALUES (?, ?, ?, ?)";
 
-        int rowsAffected;
+        int rowsAffected = -1;
 
         try (Connection connection = DBCPDataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -50,6 +50,8 @@ public class SqliteCityDao implements CityDao {
             preparedStatement.setDouble(3, city.getCityGeoPoint().getLatitude());
             preparedStatement.setString(4, city.getCountry());
             rowsAffected = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         if (rowsAffected == 1) {
@@ -62,7 +64,7 @@ public class SqliteCityDao implements CityDao {
     }
 
     @Override
-    public List<City> findByUserId(int id) throws SQLException {
+    public List<City> findByUserId(int id) {
 
         final String query = "SELECT ct." + Table.Column.CITY_ID + ","
             + "ct." + Table.Column.CITY_NAME + ","
@@ -77,7 +79,7 @@ public class SqliteCityDao implements CityDao {
     }
 
     @Override
-    public Optional<City> findByCityName(String name) throws SQLException {
+    public Optional<City> findByCityName(String name) {
 
         final String query = "SELECT * FROM " + Table.CITY
             + " WHERE " + Table.Column.CITY_NAME + "=" + "'" + name + "'";
@@ -99,6 +101,8 @@ public class SqliteCityDao implements CityDao {
                     .country(resultSet.getString(Table.Column.CITY_COUNTRY.name()))
                     .build();
             }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return Optional.ofNullable(city);

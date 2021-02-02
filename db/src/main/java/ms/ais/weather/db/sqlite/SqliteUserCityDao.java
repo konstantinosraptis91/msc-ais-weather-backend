@@ -24,7 +24,7 @@ public class SqliteUserCityDao implements UserCityDao {
     }
 
     @Override
-    public int insertUserCity(int userId, int cityId) throws SQLException {
+    public int insertUserCity(int userId, int cityId) {
 
         final String query = "INSERT INTO " + Table.USER_CITY
             + " ("
@@ -33,7 +33,7 @@ public class SqliteUserCityDao implements UserCityDao {
             + ")"
             + " VALUES (?,?)";
 
-        int rowsAffected;
+        int rowsAffected = -1;
 
         try (Connection connection = DBCPDataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -41,6 +41,8 @@ public class SqliteUserCityDao implements UserCityDao {
             preparedStatement.setInt(1, cityId);
             preparedStatement.setInt(2, userId);
             rowsAffected = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         return rowsAffected;

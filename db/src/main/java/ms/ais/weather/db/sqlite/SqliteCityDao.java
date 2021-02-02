@@ -115,8 +115,7 @@ public class SqliteCityDao implements CityDao {
             + " ct.city_id, ct.city_name, ct.city_longitude, ct.city_latitude, ct.city_country"
             + " FROM city ct"
             + " INNER JOIN user_city uc ON ct.city_id = uc.city_id"
-            + " INNER JOIN user u ON uc.user_id = u.user_id"
-            + " INNER JOIN token t ON u.user_id = t.user_id"
+            + " INNER JOIN token t ON uc.user_id = t.user_id"
             + " WHERE t.token_id = '" + tokenId + "'";
 
         return findCitiesByQuery(query);

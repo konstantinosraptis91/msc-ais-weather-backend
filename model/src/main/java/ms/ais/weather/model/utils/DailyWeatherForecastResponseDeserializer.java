@@ -40,6 +40,8 @@ public class DailyWeatherForecastResponseDeserializer extends JsonDeserializer<D
             .build();
         final List<DailyWeatherForecast> forecastList = new ArrayList<>();
 
+        int counter = 0;
+
         for (JsonNode dailyWeatherJson : dailyWeatherJsonArray) {
 
             DailyWeatherForecast forecast = DailyWeatherForecast.builder()
@@ -50,6 +52,12 @@ public class DailyWeatherForecastResponseDeserializer extends JsonDeserializer<D
                 .build();
 
             forecastList.add(forecast);
+
+            // Get the next 5 days
+            if (counter >= 4) {
+                break;
+            }
+            counter++;
         }
 
         response.getForecastList().addAll(forecastList);

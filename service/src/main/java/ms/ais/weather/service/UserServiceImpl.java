@@ -8,7 +8,6 @@ import ms.ais.weather.model.db.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,10 +22,12 @@ public class UserServiceImpl implements UserService {
     public Optional<String> signUp(User user) {
 
         UserDao userDao = DaoFactory.createUserDao();
-        String tokenId;
+        String tokenId = null;
 
-        try {
-            int userId = userDao.insertUser(user);
+        LOGGER.debug("Trying to Sign up user: " + user.toString());
+
+        int userId = userDao.insertUser(user);
+        if (userId == -1) {
             LOGGER.debug("User: " + user.toString() + " inserted successfully!!! User id: " + userId);
 
             TokenDao tokenDao = DaoFactory.createTokenDao();
@@ -36,12 +37,10 @@ public class UserServiceImpl implements UserService {
                 .tokenId(tokenId)
                 .build();
 
-            tokenDao.insertToken(token);
-            LOGGER.debug("Token: " + token.toString() + " inserted successfully!!!");
-
-        } catch (SQLException e) {
-            LOGGER.error("Failed to signUp user: " + user.toString(), e);
-            return Optional.empty();
+            int rowsAffected = tokenDao.insertToken(token);
+            if (rowsAffected == 1) {
+                LOGGER.debug("Token: " + token.toString() + " inserted successfully!!!");
+            }
         }
 
         return Optional.ofNullable(tokenId);
@@ -52,28 +51,25 @@ public class UserServiceImpl implements UserService {
 
         String tokenId = null;
 
-        try {
-            LOGGER.debug("Trying to Sign in user with email: " + email + ", password: " + String.valueOf(password));
-            UserDao userDao = DaoFactory.createUserDao();
-            Optional<User> oUser = userDao.findUserByCredentials(email, password);
+        LOGGER.debug("Trying to Sign in user with email: " + email + ", password: " + String.valueOf(password));
+        UserDao userDao = DaoFactory.createUserDao();
+        Optional<User> oUser = userDao.findUserByCredentials(email, password);
 
-            if (oUser.isPresent()) {
-                TokenDao tokenDao = DaoFactory.createTokenDao();
-                Token token = Token.builder()
-                    .tokenId(UUID.randomUUID().toString())
-                    .userId(oUser.get().getId())
-                    .build();
+        if (oUser.isPresent()) {
+            TokenDao tokenDao = DaoFactory.createTokenDao();
+            Token token = Token.builder()
+                .tokenId(UUID.randomUUID().toString())
+                .userId(oUser.get().getId())
+                .build();
 
-                tokenDao.insertToken(token);
+            int rowsAffected = tokenDao.insertToken(token);
+            if (rowsAffected == 1) {
                 tokenId = token.getId();
                 LOGGER.debug("User with email: " + email + ", password: " + String.valueOf(password)
                     + " signed in successfully!!!");
-            } else {
-                LOGGER.debug("Unable to find user with email: " + email + " and password: " + String.valueOf(password));
             }
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+        } else {
+            LOGGER.debug("Unable to find user with email: " + email + " and password: " + String.valueOf(password));
         }
 
         return Optional.ofNullable(tokenId);
@@ -85,16 +81,11 @@ public class UserServiceImpl implements UserService {
         TokenDao tokenDao = DaoFactory.createTokenDao();
         boolean isDeleted = false;
 
-        try {
-            LOGGER.debug("Trying to delete token with id: " + tokenId);
-            int rowsAffected = tokenDao.deleteTokenById(tokenId);
-            if (rowsAffected == 1) {
-                isDeleted = true;
-                LOGGER.debug("Token with id: " + tokenId + " deleted successfully!!!");
-            }
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+        LOGGER.debug("Trying to delete token with id: " + tokenId);
+        int rowsAffected = tokenDao.deleteTokenById(tokenId);
+        if (rowsAffected == 1) {
+            isDeleted = true;
+            LOGGER.debug("Token with id: " + tokenId + " deleted successfully!!!");
         }
 
         return isDeleted;

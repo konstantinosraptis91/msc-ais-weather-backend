@@ -1,12 +1,10 @@
 package ms.ais.weather.service;
 
-import ms.ais.weather.db.CityDao;
 import ms.ais.weather.db.DaoFactory;
 import ms.ais.weather.model.db.City;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +23,7 @@ public class CityServiceImpl implements CityService {
      */
     @Override
     public List<City> findCitiesByTokenId(String id) {
-        CityDao cityDao = DaoFactory.createCityDao();
-        return cityDao.findByUserTokenId(id);
+        return DaoFactory.createCityDao().findByUserTokenId(id);
     }
 
     /**

@@ -5,6 +5,4 @@ package ms.ais.weather.service;
  */
 public interface TokenService {
 
-
-
 }

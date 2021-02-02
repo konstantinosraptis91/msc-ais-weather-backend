@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -33,6 +32,14 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
 
+    /**
+     * Get current weather forecast, which contains:
+     * -current:
+     * --temperature conditions, weather conditions, wind conditions
+     *
+     * @param cityName The city name
+     * @return The weather forecast
+     */
     @Override
     public CurrentWeatherForecastResponse getCurrentWeatherForecastResponse(String cityName) {
 
@@ -65,6 +72,14 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         return response;
     }
 
+    /**
+     * Get hourly weather forecast for the next 2 days, which contains:
+     * -hourly:
+     * --temperature conditions, weather conditions
+     *
+     * @param cityName The city name
+     * @return The weather forecast
+     */
     @Override
     public HourlyWeatherForecastResponse getHourlyWeatherForecastResponse(String cityName) {
 
@@ -97,6 +112,16 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         return response;
     }
 
+    /**
+     * Get daily weather forecast for the next 5 days, which contains:
+     * -current:
+     * --temperature conditions
+     * -daily:
+     * --temperature conditions, weather conditions, wind conditions
+     *
+     * @param cityName The city name
+     * @return The weather forecast
+     */
     @Override
     public DailyWeatherForecastResponse getDailyWeatherForecastResponse(String cityName) {
 
@@ -135,6 +160,12 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         return response;
     }
 
+    /**
+     * Get city by name from openWeatherMap API.
+     *
+     * @param name The city name
+     * @return The city
+     */
     @Override
     public Optional<City> getCityByName(String name) {
 
@@ -160,13 +191,19 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             CityDao cityDao = DaoFactory.createCityDao();
             cityDao.insertCity(city);
 
-        } catch (URISyntaxException | IOException | InterruptedException | SQLException e) {
+        } catch (URISyntaxException | IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         }
 
         return Optional.ofNullable(city);
     }
 
+    /**
+     * Try to find city in db or get it from openWeatherMap API.
+     *
+     * @param name The city name
+     * @return The city
+     */
     private City findCityByNameOrThrowException(String name) {
         return ServiceFactory.createCityService()
             .findCityByName(name)

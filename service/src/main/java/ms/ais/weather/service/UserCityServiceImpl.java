@@ -8,12 +8,26 @@ import ms.ais.weather.db.UserCityDao;
  */
 public class UserCityServiceImpl implements UserCityService {
 
+    /**
+     * Delete a city from a user.
+     *
+     * @param tokenId The token id
+     * @param cityId  The city id
+     * @return The deletion result
+     */
     @Override
     public boolean deleteUserCityByTokenId(String tokenId, int cityId) {
         UserCityDao userCityDao = DaoFactory.createUserCityDao();
         return userCityDao.deleteUserCityByTokenId(tokenId, cityId) == 1;
     }
 
+    /**
+     * Insert a city to a user.
+     *
+     * @param tokenId The token id
+     * @param cityId  The city id
+     * @return The insertion result
+     */
     @Override
     public boolean insertUserCityByTokenId(String tokenId, int cityId) {
         UserCityDao userCityDao = DaoFactory.createUserCityDao();

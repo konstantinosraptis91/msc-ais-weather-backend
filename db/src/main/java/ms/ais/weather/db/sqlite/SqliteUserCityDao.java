@@ -75,8 +75,7 @@ public class SqliteUserCityDao implements UserCityDao {
 
         final String query = "DELETE"
             + " FROM user_city"
-            + " WHERE (SELECT u.user_id FROM user u INNER JOIN token t ON u.user_id = t.user_id"
-            + " WHERE t.token_id = '" + tokenId + "')"
+            + " WHERE user_id = (SELECT t.user_id FROM token t WHERE t.token_id = ?)"
             + " AND city_id = ?";
 
         int rowsAffected = -1;
@@ -84,7 +83,8 @@ public class SqliteUserCityDao implements UserCityDao {
         try (Connection connection = DBCPDataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, cityId);
+            preparedStatement.setString(1, tokenId);
+            preparedStatement.setInt(2, cityId);
             rowsAffected = preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);

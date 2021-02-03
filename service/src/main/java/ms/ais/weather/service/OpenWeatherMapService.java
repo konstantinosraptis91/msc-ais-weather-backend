@@ -232,15 +232,15 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         String jsonString;
 
         if (OpenWeatherMapCache.INSTANCE.getCache().containsKey(task.getURI().toString())) {
-            LOGGER.debug("Found and serving from cache!");
+            LOGGER.debug("Call: [" + task.getURI().toString() + "] found and serving from cache!!!");
             jsonString = OpenWeatherMapCache.INSTANCE.getCache().get(task.getURI().toString());
         } else {
-            LOGGER.debug("Not found in cache, performing a call to openWeatherMap API!");
+            LOGGER.debug("Call: [" + task.getURI().toString()
+                + "] not found in cache, performing a call to openWeatherMap API.");
             jsonString = task.call();
-            // LOGGER.debug("Storing: [" + jsonString + "] in cache.");
-            LOGGER.debug("Storing.. result in cache.");
+            LOGGER.debug("Storing... Call: [" + task.getURI().toString() + "]result in cache.");
             OpenWeatherMapCache.INSTANCE.getCache().put(task.getURI().toString(), jsonString);
-            LOGGER.debug("Result stored successfully in cache!!!");
+            LOGGER.debug("Call: [" + task.getURI().toString() + "] stored successfully in cache!!!");
         }
 
         return jsonString;

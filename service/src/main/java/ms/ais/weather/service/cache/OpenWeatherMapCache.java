@@ -21,14 +21,14 @@ public enum OpenWeatherMapCache {
     OpenWeatherMapCache() {
         CacheManager cacheManager = CacheManagerBuilder
             .newCacheManagerBuilder()
-            .withCache("preConfigured",
+            .withCache("OpenWeatherMapCache",
                 CacheConfigurationBuilder.newCacheConfigurationBuilder(
                     String.class, String.class, ResourcePoolsBuilder.heap(1000))
                     .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofHours(1)))
             )
             .build();
         cacheManager.init();
-        cache = cacheManager.getCache("preConfigured", String.class, String.class);
+        cache = cacheManager.getCache("OpenWeatherMapCache", String.class, String.class);
     }
 
     public Cache<String, String> getCache() {

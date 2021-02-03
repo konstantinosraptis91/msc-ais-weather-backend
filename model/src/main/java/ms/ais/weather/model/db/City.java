@@ -1,15 +1,19 @@
 package ms.ais.weather.model.db;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import ms.ais.weather.model.location.CityGeoPoint;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
  */
+@JsonPropertyOrder({
+    "cityGeoPoint", "id", "country"
+})
 public class City {
 
-    private final int id;
+    private int id;
     private final CityGeoPoint cityGeoPoint;
-    private final String country;
+    private String country;
 
     private City(Builder builder) {
         this.id = builder.id;
@@ -27,6 +31,14 @@ public class City {
 
     public String getCountry() {
         return country;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public static Builder builder() {

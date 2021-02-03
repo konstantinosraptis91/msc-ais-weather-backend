@@ -66,6 +66,9 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, CurrentWeatherForecastResponse.class);
+            // finalize city
+            response.getCity().setId(city.getId());
+            response.getCity().setCountry(city.getCountry());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -238,7 +241,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             LOGGER.debug("Call: [" + task.getURI().toString()
                 + "] not found in cache, performing a call to openWeatherMap API.");
             jsonString = task.call();
-            LOGGER.debug("Storing... Call: [" + task.getURI().toString() + "]result in cache.");
+            LOGGER.debug("Storing... Call: [" + task.getURI().toString() + "] in cache.");
             OpenWeatherMapCache.INSTANCE.getCache().put(task.getURI().toString(), jsonString);
             LOGGER.debug("Call: [" + task.getURI().toString() + "] stored successfully in cache!!!");
         }
@@ -252,7 +255,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
      * @param name The city name
      * @return The city
      */
-    private City findCityByNameOrThrowException(String name) {
+    private synchronized City findCityByNameOrThrowException(String name) {
         return ServiceFactory.createCityService()
             .findCityByName(name)
             .orElseThrow(() -> new NoSuchElementException(

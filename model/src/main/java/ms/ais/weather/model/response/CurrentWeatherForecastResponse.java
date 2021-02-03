@@ -2,23 +2,23 @@ package ms.ais.weather.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ms.ais.weather.model.CurrentWeatherForecast;
-import ms.ais.weather.model.location.CityGeoPoint;
+import ms.ais.weather.model.db.City;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 23/1/2021.
  */
 public class CurrentWeatherForecastResponse {
 
-    private final CityGeoPoint cityGeoPoint;
+    private final City city;
     private final CurrentWeatherForecast forecast;
 
     private CurrentWeatherForecastResponse(Builder builder) {
-        this.cityGeoPoint = builder.cityGeoPoint;
+        this.city = builder.city;
         this.forecast = builder.forecast;
     }
 
-    public CityGeoPoint getCityGeoPoint() {
-        return cityGeoPoint;
+    public City getCity() {
+        return city;
     }
 
     @JsonProperty("current")
@@ -32,11 +32,11 @@ public class CurrentWeatherForecastResponse {
 
     public static class Builder {
 
-        private CityGeoPoint cityGeoPoint;
+        private City city;
         private CurrentWeatherForecast forecast;
 
-        public Builder cityGeoPoint(CityGeoPoint cityGeoPoint) {
-            this.cityGeoPoint = cityGeoPoint;
+        public Builder city(City city) {
+            this.city = city;
             return this;
         }
 

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ms.ais.weather.model.CurrentWeatherForecast;
 import ms.ais.weather.model.conditions.*;
 import ms.ais.weather.model.conditions.utils.WindDirectionUtils;
+import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
 
@@ -33,7 +34,7 @@ public class CurrentWeatherForecastResponseDeserializer extends JsonDeserializer
             .build();
 
         return CurrentWeatherForecastResponse.builder()
-            .cityGeoPoint(extractCityGeoPoint(currentWeatherJson))
+            .city(extractCity(currentWeatherJson))
             .currentWeatherForecast(forecast)
             .build();
     }
@@ -42,16 +43,28 @@ public class CurrentWeatherForecastResponseDeserializer extends JsonDeserializer
         return currentWeatherJson.path("dt").asLong();
     }
 
-    private CityGeoPoint extractCityGeoPoint(final JsonNode currentWeatherJson) {
+//    private CityGeoPoint extractCityGeoPoint(final JsonNode currentWeatherJson) {
+//        double longitude = currentWeatherJson.path("coord").path("lon").asDouble();
+//        double latitude = currentWeatherJson.path("coord").path("lat").asDouble();
+//        String cityName = currentWeatherJson.path("name").asText();
+//
+//        return CityGeoPoint.builder()
+//            .withLongitude(longitude)
+//            .withLatitude(latitude)
+//            .withCityName(cityName)
+//            .build();
+//    }
+
+    private City extractCity(final JsonNode currentWeatherJson) {
         double longitude = currentWeatherJson.path("coord").path("lon").asDouble();
         double latitude = currentWeatherJson.path("coord").path("lat").asDouble();
         String cityName = currentWeatherJson.path("name").asText();
 
-        return CityGeoPoint.builder()
-            .withLongitude(longitude)
-            .withLatitude(latitude)
-            .withCityName(cityName)
-            .build();
+        return City.builder()
+            .cityGeoPoint(CityGeoPoint.builder().withLongitude(longitude)
+                .withLatitude(latitude)
+                .withCityName(cityName)
+                .build()).build();
     }
 
     private CurrentWeatherConditions extractCurrentWeatherConditions(final JsonNode currentWeatherJson) {

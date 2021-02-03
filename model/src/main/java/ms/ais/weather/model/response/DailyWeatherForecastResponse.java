@@ -3,6 +3,7 @@ package ms.ais.weather.model.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ms.ais.weather.model.DailyWeatherForecast;
 import ms.ais.weather.model.conditions.CurrentTemperatureConditions;
+import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 
 import java.util.ArrayList;
@@ -14,17 +15,17 @@ import java.util.Objects;
  */
 public class DailyWeatherForecastResponse {
 
-    private final CityGeoPoint cityGeoPoint;
+    private final City city;
     private final CurrentTemperatureConditions temperatureConditions;
     private List<DailyWeatherForecast> forecastList;
 
     private DailyWeatherForecastResponse(Builder builder) {
-        this.cityGeoPoint = builder.cityGeoPoint;
+        this.city = builder.city;
         this.temperatureConditions = builder.temperatureConditions;
     }
 
-    public CityGeoPoint getCityGeoPoint() {
-        return cityGeoPoint;
+    public City getCity() {
+        return city;
     }
 
     @JsonProperty("currentTemperatureConditions")
@@ -41,7 +42,7 @@ public class DailyWeatherForecastResponse {
     }
 
     public interface DailyWeatherForecastResponseCityGeoPoint {
-        DailyWeatherForecastResponseCurrentTemperatureConditions cityGeoPoint(CityGeoPoint cityGeoPoint);
+        DailyWeatherForecastResponseCurrentTemperatureConditions city(City city);
     }
 
     public interface DailyWeatherForecastResponseCurrentTemperatureConditions {
@@ -61,12 +62,12 @@ public class DailyWeatherForecastResponse {
         DailyWeatherForecastResponseCurrentTemperatureConditions,
         DailyWeatherForecastResponseBuild {
 
-        private CityGeoPoint cityGeoPoint;
+        private City city;
         private CurrentTemperatureConditions temperatureConditions;
 
         @Override
-        public DailyWeatherForecastResponseCurrentTemperatureConditions cityGeoPoint(CityGeoPoint cityGeoPoint) {
-            this.cityGeoPoint = cityGeoPoint;
+        public DailyWeatherForecastResponseCurrentTemperatureConditions city(City city) {
+            this.city = city;
             return this;
         }
 

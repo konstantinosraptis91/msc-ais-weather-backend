@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ms.ais.weather.model.HourlyWeatherForecast;
 import ms.ais.weather.model.conditions.*;
+import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
 
@@ -28,7 +29,7 @@ public class HourlyWeatherForecastResponseDeserializer extends JsonDeserializer<
         final JsonNode hourlyWeatherJsonRootObj = mapper.readTree(jsonParser);
         final JsonNode hourlyWeatherJsonArray = hourlyWeatherJsonRootObj.path("hourly");
         final HourlyWeatherForecastResponse response =
-            HourlyWeatherForecastResponse.createInstance(extractCityGeoPoint(hourlyWeatherJsonRootObj));
+            HourlyWeatherForecastResponse.createInstance(extractCity(hourlyWeatherJsonRootObj));
         final List<HourlyWeatherForecast> forecastList = new ArrayList<>();
 
         for (JsonNode hourlyWeatherJson : hourlyWeatherJsonArray) {
@@ -46,17 +47,30 @@ public class HourlyWeatherForecastResponseDeserializer extends JsonDeserializer<
         return response;
     }
 
-    private CityGeoPoint extractCityGeoPoint(final JsonNode hourlyWeatherJsonRootObj) {
+//    private CityGeoPoint extractCityGeoPoint(final JsonNode hourlyWeatherJsonRootObj) {
+//        double longitude = hourlyWeatherJsonRootObj.path("lon").asDouble();
+//        double latitude = hourlyWeatherJsonRootObj.path("lat").asDouble();
+//        String cityName = hourlyWeatherJsonRootObj.path("timezone").asText();
+//
+//        return CityGeoPoint.builder()
+//            .withLongitude(longitude)
+//            .withLatitude(latitude)
+//            .withCityName(cityName)
+//            .build();
+//    }
+
+    private City extractCity(final JsonNode hourlyWeatherJsonRootObj) {
         double longitude = hourlyWeatherJsonRootObj.path("lon").asDouble();
         double latitude = hourlyWeatherJsonRootObj.path("lat").asDouble();
         String cityName = hourlyWeatherJsonRootObj.path("timezone").asText();
 
-        return CityGeoPoint.builder()
-            .withLongitude(longitude)
-            .withLatitude(latitude)
-            .withCityName(cityName)
-            .build();
+        return City.builder()
+            .cityGeoPoint(CityGeoPoint.builder().withLongitude(longitude)
+                .withLatitude(latitude)
+                .withCityName(cityName)
+                .build()).build();
     }
+
 
     private long extractTimestamp(final JsonNode hourlyWeatherJson) {
         return hourlyWeatherJson.path("dt").asLong();

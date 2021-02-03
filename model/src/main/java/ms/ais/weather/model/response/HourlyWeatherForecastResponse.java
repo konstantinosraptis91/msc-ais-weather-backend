@@ -2,6 +2,7 @@ package ms.ais.weather.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ms.ais.weather.model.HourlyWeatherForecast;
+import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 
 import java.util.ArrayList;
@@ -13,19 +14,19 @@ import java.util.Objects;
  */
 public class HourlyWeatherForecastResponse {
 
-    private final CityGeoPoint cityGeoPoint;
+    private final City city;
     private List<HourlyWeatherForecast> forecastList;
 
-    private HourlyWeatherForecastResponse(CityGeoPoint cityGeoPoint) {
-        this.cityGeoPoint = cityGeoPoint;
+    private HourlyWeatherForecastResponse(City city) {
+        this.city = city;
     }
 
-    public static HourlyWeatherForecastResponse createInstance(CityGeoPoint cityGeoPoint) {
-        return new HourlyWeatherForecastResponse(cityGeoPoint);
+    public static HourlyWeatherForecastResponse createInstance(City city) {
+        return new HourlyWeatherForecastResponse(city);
     }
 
-    public CityGeoPoint getCityGeoPoint() {
-        return cityGeoPoint;
+    public City getCity() {
+        return city;
     }
 
     @JsonProperty("hourly")

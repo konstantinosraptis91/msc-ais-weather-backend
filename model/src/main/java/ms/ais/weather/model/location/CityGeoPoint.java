@@ -8,11 +8,15 @@ public class CityGeoPoint extends GeoPoint {
     /**
      * The city name
      */
-    private final String cityName;
+    private String cityName;
 
     private CityGeoPoint(Builder builder) {
         super(builder.longitude, builder.latitude);
         this.cityName = builder.cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getCityName() {

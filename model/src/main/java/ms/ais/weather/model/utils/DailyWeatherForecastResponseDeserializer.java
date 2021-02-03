@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ms.ais.weather.model.DailyWeatherForecast;
 import ms.ais.weather.model.conditions.*;
 import ms.ais.weather.model.conditions.utils.WindDirectionUtils;
+import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 import ms.ais.weather.model.response.DailyWeatherForecastResponse;
 
@@ -35,7 +36,7 @@ public class DailyWeatherForecastResponseDeserializer extends JsonDeserializer<D
         final JsonNode dailyWeatherJsonRootObj = mapper.readTree(jsonParser);
         final JsonNode dailyWeatherJsonArray = dailyWeatherJsonRootObj.path("daily");
         final DailyWeatherForecastResponse response = DailyWeatherForecastResponse.builder()
-            .cityGeoPoint(extractCityGeoPoint(dailyWeatherJsonRootObj))
+            .city(extractCity(dailyWeatherJsonRootObj))
             .currentTemperatureConditions(temperatureConditions)
             .build();
         final List<DailyWeatherForecast> forecastList = new ArrayList<>();
@@ -64,16 +65,28 @@ public class DailyWeatherForecastResponseDeserializer extends JsonDeserializer<D
         return response;
     }
 
-    private CityGeoPoint extractCityGeoPoint(final JsonNode dailyWeatherJsonRootObj) {
+//    private CityGeoPoint extractCityGeoPoint(final JsonNode dailyWeatherJsonRootObj) {
+//        double longitude = dailyWeatherJsonRootObj.path("lon").asDouble();
+//        double latitude = dailyWeatherJsonRootObj.path("lat").asDouble();
+//        String cityName = dailyWeatherJsonRootObj.path("timezone").asText();
+//
+//        return CityGeoPoint.builder()
+//            .withLongitude(longitude)
+//            .withLatitude(latitude)
+//            .withCityName(cityName)
+//            .build();
+//    }
+
+    private City extractCity(final JsonNode dailyWeatherJsonRootObj) {
         double longitude = dailyWeatherJsonRootObj.path("lon").asDouble();
         double latitude = dailyWeatherJsonRootObj.path("lat").asDouble();
         String cityName = dailyWeatherJsonRootObj.path("timezone").asText();
 
-        return CityGeoPoint.builder()
-            .withLongitude(longitude)
-            .withLatitude(latitude)
-            .withCityName(cityName)
-            .build();
+        return City.builder()
+            .cityGeoPoint(CityGeoPoint.builder().withLongitude(longitude)
+                .withLatitude(latitude)
+                .withCityName(cityName)
+                .build()).build();
     }
 
     private long extractTimestamp(final JsonNode dailyWeatherJson) {

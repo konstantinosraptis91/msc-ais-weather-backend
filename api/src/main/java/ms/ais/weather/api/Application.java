@@ -14,7 +14,6 @@ import ms.ais.weather.api.enums.ServerConfig;
 public class Application {
 
     public static void main(String[] args) {
-
         Javalin app = Javalin.create(JavalinConfig::enableCorsForAllOrigins)
             .start(ServerConfig.INSTANCE.getPort());
 

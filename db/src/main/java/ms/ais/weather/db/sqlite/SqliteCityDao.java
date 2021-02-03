@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
@@ -93,12 +94,43 @@ public class SqliteCityDao implements CityDao {
     }
 
     @Override
+    public OptionalInt findCityIdByNameOrAlias(String nameOrAlias) {
+
+        final String query = "SELECT city_id"
+            + " FROM (SELECT city_id, city_name FROM city"
+            + " UNION"
+            + " SELECT city_id, alias_name FROM alias)"
+            + " WHERE city_name = '" + nameOrAlias + "'";
+
+        OptionalInt oCityId = OptionalInt.empty();
+
+        try (Connection connection = DBCPDataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            if (resultSet.next()) {
+                oCityId = OptionalInt.of(resultSet.getInt(Table.Column.CITY_ID.name()));
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return oCityId;
+    }
+
+    @Override
     public Optional<City> findByCityName(String name) {
+
+//        final String query = "SELECT"
+//            + " ct.city_id, ct.city_name, ct.city_longitude, ct.city_latitude, ct.city_country"
+//            + " FROM city ct"
+//            + " WHERE ct.city_name = '" + name + "'";
 
         final String query = "SELECT"
             + " ct.city_id, ct.city_name, ct.city_longitude, ct.city_latitude, ct.city_country"
             + " FROM city ct LEFT JOIN alias a ON ct.city_id = a.city_id"
-            + " WHERE ct.city_name = '" + name + "' OR a.alias_name = '" + name + "'";
+            + " WHERE ct.city_name = '" + name + "' OR a.alias_name = '" + name + "'"
+            + " LIMIT 1";
 
         City city = null;
 

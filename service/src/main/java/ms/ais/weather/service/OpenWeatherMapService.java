@@ -43,26 +43,27 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
      * @return The weather forecast
      */
     @Override
-    public CurrentWeatherForecastResponse getCurrentWeatherForecastResponse(String cityName) {
-
-        City city = findCityByNameOrThrowException(cityName);
-
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
-            OpenWeatherMapURI.builder()
-                .withCityName(city.getCityGeoPoint().getCityName())
-                .withKey("200681ee8b9be15aafc017130d88cd41")
-                .withUnitsType(UnitsType.METRIC)
-                .withWeatherForecastType(WeatherForecastType.CURRENT)
-                .build().getURI());
-
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(CurrentWeatherForecastResponse.class, new CurrentWeatherForecastResponseDeserializer());
-        mapper.registerModule(module);
+    public Optional<CurrentWeatherForecastResponse> getCurrentWeatherForecastResponse(String cityName) {
 
         CurrentWeatherForecastResponse response = null;
 
         try {
+            City city = findCityByNameOrThrowException(cityName);
+
+            GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
+                OpenWeatherMapURI.builder()
+                    .withCityName(city.getCityGeoPoint().getCityName())
+                    .withKey("200681ee8b9be15aafc017130d88cd41")
+                    .withUnitsType(UnitsType.METRIC)
+                    .withWeatherForecastType(WeatherForecastType.CURRENT)
+                    .build().getURI());
+
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(CurrentWeatherForecastResponse.class, new CurrentWeatherForecastResponseDeserializer());
+            mapper.registerModule(module);
+
+
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, CurrentWeatherForecastResponse.class);
 
@@ -72,7 +73,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             LOGGER.error(e.getMessage());
         }
 
-        return response;
+        return Optional.ofNullable(response);
     }
 
     /**
@@ -84,27 +85,27 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
      * @return The weather forecast
      */
     @Override
-    public HourlyWeatherForecastResponse getHourlyWeatherForecastResponse(String cityName) {
-
-        City city = findCityByNameOrThrowException(cityName);
-
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
-            OpenWeatherMapURI.builder()
-                .longitude(city.getCityGeoPoint().getLongitude())
-                .latitude(city.getCityGeoPoint().getLatitude())
-                .withKey("200681ee8b9be15aafc017130d88cd41")
-                .withUnitsType(UnitsType.METRIC)
-                .withWeatherForecastType(WeatherForecastType.HOURLY)
-                .build().getURI());
-
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(HourlyWeatherForecastResponse.class, new HourlyWeatherForecastResponseDeserializer());
-        mapper.registerModule(module);
+    public Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponse(String cityName) {
 
         HourlyWeatherForecastResponse response = null;
 
         try {
+            City city = findCityByNameOrThrowException(cityName);
+
+            GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
+                OpenWeatherMapURI.builder()
+                    .longitude(city.getCityGeoPoint().getLongitude())
+                    .latitude(city.getCityGeoPoint().getLatitude())
+                    .withKey("200681ee8b9be15aafc017130d88cd41")
+                    .withUnitsType(UnitsType.METRIC)
+                    .withWeatherForecastType(WeatherForecastType.HOURLY)
+                    .build().getURI());
+
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(HourlyWeatherForecastResponse.class, new HourlyWeatherForecastResponseDeserializer());
+            mapper.registerModule(module);
+
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, HourlyWeatherForecastResponse.class);
         } catch (IOException | InterruptedException e) {
@@ -113,7 +114,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             LOGGER.error(e.getMessage());
         }
 
-        return response;
+        return Optional.ofNullable(response);
     }
 
     /**
@@ -127,33 +128,37 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
      * @return The weather forecast
      */
     @Override
-    public DailyWeatherForecastResponse getDailyWeatherForecastResponse(String cityName) {
-
-        City city = findCityByNameOrThrowException(cityName);
-
-        GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
-            OpenWeatherMapURI.builder()
-                .longitude(city.getCityGeoPoint().getLongitude())
-                .latitude(city.getCityGeoPoint().getLatitude())
-                .withKey("200681ee8b9be15aafc017130d88cd41")
-                .withUnitsType(UnitsType.METRIC)
-                .withWeatherForecastType(WeatherForecastType.DAILY)
-                .build().getURI());
-
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-
-        CurrentWeatherForecastResponse currentWeatherForecastResponse = getCurrentWeatherForecastResponse(cityName);
-        module.addDeserializer(DailyWeatherForecastResponse.class,
-            new DailyWeatherForecastResponseDeserializer(
-                currentWeatherForecastResponse
-                    .getForecast()
-                    .getTemperatureConditions()));
-        mapper.registerModule(module);
+    public Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponse(String cityName) {
 
         DailyWeatherForecastResponse response = null;
 
         try {
+            City city = findCityByNameOrThrowException(cityName);
+
+            GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
+                OpenWeatherMapURI.builder()
+                    .longitude(city.getCityGeoPoint().getLongitude())
+                    .latitude(city.getCityGeoPoint().getLatitude())
+                    .withKey("200681ee8b9be15aafc017130d88cd41")
+                    .withUnitsType(UnitsType.METRIC)
+                    .withWeatherForecastType(WeatherForecastType.DAILY)
+                    .build().getURI());
+
+            final ObjectMapper mapper = new ObjectMapper();
+            final SimpleModule module = new SimpleModule();
+
+            CurrentWeatherForecastResponse currentWeatherForecastResponse
+                = getCurrentWeatherForecastResponse(cityName)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Cannot get a current weather forecast response..."));
+
+            module.addDeserializer(DailyWeatherForecastResponse.class,
+                new DailyWeatherForecastResponseDeserializer(
+                    currentWeatherForecastResponse
+                        .getForecast()
+                        .getTemperatureConditions()));
+            mapper.registerModule(module);
+
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, DailyWeatherForecastResponse.class);
         } catch (IOException | InterruptedException e) {
@@ -162,17 +167,17 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             LOGGER.error(e.getMessage());
         }
 
-        return response;
+        return Optional.ofNullable(response);
     }
 
     /**
-     * Get city by name from openWeatherMap API.
+     * Get city by name or alias from openWeatherMap API.
      *
-     * @param name The city name
+     * @param nameOrAlias The city name
      * @return The city
      */
     @Override
-    public Optional<City> getCityByName(String name) {
+    public Optional<City> getCityByName(String nameOrAlias) {
 
         City city = null;
 
@@ -182,7 +187,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                     .setScheme("https")
                     .setHost("api.openweathermap.org/geo/1.0")
                     .setPath("/direct")
-                    .setParameter("q", name)
+                    .setParameter("q", nameOrAlias)
                     .setParameter("appid", "200681ee8b9be15aafc017130d88cd41")
                     .setParameter("limit", "1").build());
 
@@ -200,21 +205,21 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             if (generatedKey != -1) {
                 cityId = generatedKey;
             } else {
-                cityId = cityDao.findByCityName(city.getCityGeoPoint().getCityName())
-                    .orElseThrow(() -> new NoSuchElementException("Throwing from here")).getId();
+                cityId = cityDao.findCityIdByNameOrAlias(city.getCityGeoPoint().getCityName())
+                    .orElseThrow(() -> new NoSuchElementException(
+                        "Cannot find city: " + nameOrAlias + " in db (city_name or alias_name)."));
             }
 
             // If city name taken from API not equal with given name, create an alias
-            if (!city.getCityGeoPoint().getCityName().equals(name)) {
-                LOGGER.debug("Adding an alias for " + city.getCityGeoPoint().getCityName() + " -> " + name);
+            if (!city.getCityGeoPoint().getCityName().equals(nameOrAlias)) {
+                LOGGER.debug("Adding an alias for " + city.getCityGeoPoint().getCityName() + " -> " + nameOrAlias);
                 AliasDao aliasDao = DaoFactory.createAliasDao();
-                aliasDao.insertAlias(cityId, name);
+                aliasDao.insertAlias(cityId, nameOrAlias);
             }
         } catch (URISyntaxException | IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (NoSuchElementException e) {
-            // LOGGER.error("Cannot find a city for given name: " + name);
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
         }
 
         return Optional.ofNullable(city);

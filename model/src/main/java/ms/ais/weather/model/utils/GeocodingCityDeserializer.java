@@ -10,6 +10,7 @@ import ms.ais.weather.model.db.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 1/2/2021.
@@ -24,7 +25,7 @@ public class GeocodingCityDeserializer extends JsonDeserializer<City> {
         final JsonNode cityGeocodingRootArray = mapper.readTree(jsonParser);
         final JsonNode firstCityJsonObject = cityGeocodingRootArray.iterator().next();
 
-        final String name = firstCityJsonObject.path("local_names").path("en").asText();
+        final String name = extractCityName(firstCityJsonObject);
         final String country2ACode = firstCityJsonObject.path("country").asText();
         final double longitude = firstCityJsonObject.path("lon").asDouble();
         final double latitude = firstCityJsonObject.path("lat").asDouble();
@@ -38,4 +39,11 @@ public class GeocodingCityDeserializer extends JsonDeserializer<City> {
             .country(CodelistsOfBiMap.COUNTRY_CODE_MAP.getValueForId(country2ACode))
             .build();
     }
+
+    private String extractCityName(JsonNode firstCityJsonObject) {
+        String enName = firstCityJsonObject.path("local_names").path("en").asText();
+        String asciiName = firstCityJsonObject.path("local_names").path("ascii").asText();
+        return Objects.isNull(enName) || enName.isEmpty() || enName.isBlank() ? asciiName : enName;
+    }
+
 }

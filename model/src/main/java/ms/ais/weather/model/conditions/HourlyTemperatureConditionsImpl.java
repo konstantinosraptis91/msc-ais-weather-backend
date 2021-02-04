@@ -33,4 +33,15 @@ public class HourlyTemperatureConditionsImpl
             return new HourlyTemperatureConditionsImpl(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "HourlyTemperatureConditionsImpl{" +
+            "type=" + type +
+            ", temperature=" + temperature +
+            ", feelsLike=" + feelsLike +
+            ", maxTemperature=" + maxTemperature +
+            ", minTemperature=" + minTemperature +
+            '}';
+    }
 }

@@ -16,4 +16,10 @@ public interface WeatherService {
     Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponse(String cityName);
 
     Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponse(String cityName);
+
+    Optional<CurrentWeatherForecastResponse> getCurrentWeatherForecastResponse();
+
+    Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponse();
+
+    Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponse();
 }

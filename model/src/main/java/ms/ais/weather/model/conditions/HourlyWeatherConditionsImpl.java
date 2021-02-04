@@ -34,4 +34,15 @@ public class HourlyWeatherConditionsImpl
         }
     }
 
+    @Override
+    public String toString() {
+        return "HourlyWeatherConditionsImpl{" +
+            "type=" + type +
+            ", main='" + main + '\'' +
+            ", description='" + description + '\'' +
+            ", cloudPercentage=" + cloudPercentage +
+            ", humidityPercentage=" + humidityPercentage +
+            ", rainProbability=" + rainProbability +
+            '}';
+    }
 }

@@ -67,4 +67,15 @@ public class DailyWeatherConditionsImpl
         }
     }
 
+    @Override
+    public String toString() {
+        return "DailyWeatherConditionsImpl{" +
+            "type=" + type +
+            ", main='" + main + '\'' +
+            ", description='" + description + '\'' +
+            ", cloudPercentage=" + cloudPercentage +
+            ", humidityPercentage=" + humidityPercentage +
+            ", rainProbability=" + rainProbability +
+            '}';
+    }
 }

@@ -10,10 +10,7 @@ import ms.ais.weather.model.enums.WeatherForecastType;
 import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
 import ms.ais.weather.model.response.DailyWeatherForecastResponse;
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
-import ms.ais.weather.model.utils.CurrentWeatherForecastResponseDeserializer;
-import ms.ais.weather.model.utils.DailyWeatherForecastResponseDeserializer;
-import ms.ais.weather.model.utils.GeocodingCityDeserializer;
-import ms.ais.weather.model.utils.HourlyWeatherForecastResponseDeserializer;
+import ms.ais.weather.model.utils.*;
 import ms.ais.weather.service.cache.OpenWeatherMapCache;
 import ms.ais.weather.service.enums.UnitsType;
 import ms.ais.weather.service.tasks.GetFromOpenWeatherMapTask;
@@ -33,6 +30,32 @@ import java.util.Optional;
 public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
+
+    /**
+     * Get current weather forecast for the current location, which contains:
+     * -current:
+     * --temperature conditions, weather conditions, wind conditions
+     *
+     * @return The weather forecast
+     */
+    @Override
+    public Optional<CurrentWeatherForecastResponse> getCurrentWeatherForecastResponse() {
+
+        Optional<CurrentWeatherForecastResponse> oResponse = Optional.empty();
+
+        try {
+            City city = getCityByCurrentLocation()
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city for the current location."));
+
+            oResponse = getCurrentWeatherForecastResponse(city.getCityGeoPoint().getCityName());
+
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return oResponse;
+    }
 
     /**
      * Get current weather forecast, which contains:
@@ -81,6 +104,32 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
     }
 
     /**
+     * Get hourly weather forecast for the next 2 days for the current location, which contains:
+     * -hourly:
+     * --temperature conditions, weather conditions
+     *
+     * @return The weather forecast
+     */
+    @Override
+    public Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponse() {
+
+        Optional<HourlyWeatherForecastResponse> oResponse = Optional.empty();
+
+        try {
+            City city = getCityByCurrentLocation()
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city for the current location."));
+
+            oResponse = getHourlyWeatherForecastResponse(city.getCityGeoPoint().getCityName());
+
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return oResponse;
+    }
+
+    /**
      * Get hourly weather forecast for the next 2 days, which contains:
      * -hourly:
      * --temperature conditions, weather conditions
@@ -124,6 +173,34 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         }
 
         return Optional.ofNullable(response);
+    }
+
+    /**
+     * Get daily weather forecast for the next 5 days for the current location, which contains:
+     * -current:
+     * --temperature conditions
+     * -daily:
+     * --temperature conditions, weather conditions, wind conditions
+     *
+     * @return The weather forecast
+     */
+    @Override
+    public Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponse() {
+
+        Optional<DailyWeatherForecastResponse> oResponse = Optional.empty();
+
+        try {
+            City city = getCityByCurrentLocation()
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city for the current location."));
+
+            oResponse = getDailyWeatherForecastResponse(city.getCityGeoPoint().getCityName());
+
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return oResponse;
     }
 
     /**
@@ -272,5 +349,39 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             .findCityByName(name)
             .orElseThrow(() -> new NoSuchElementException(
                 "Error... Cannot find city : " + name + " neither in db, nor in OpenWeatherMap API."));
+    }
+
+    /**
+     * Try to find city for the current location by using ipstack API.
+     *
+     * @return The city
+     */
+    @Override
+    public Optional<City> getCityByCurrentLocation() {
+
+        City city = null;
+
+        try {
+
+            GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
+                new URIBuilder()
+                    .setScheme("http")
+                    .setHost("api.ipstack.com")
+                    .setPath("/check")
+                    .setParameter("access_key", "8f0513df0cc0f66506cad2a187e485d6")
+                    .build());
+
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(City.class, new IPStackCityDeserializer());
+            mapper.registerModule(module);
+
+            city = mapper.readValue(task.call(), City.class);
+
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return Optional.ofNullable(city);
     }
 }

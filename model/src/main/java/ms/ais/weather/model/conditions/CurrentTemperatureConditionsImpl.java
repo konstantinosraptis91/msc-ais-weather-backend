@@ -67,4 +67,14 @@ public class CurrentTemperatureConditionsImpl
         }
     }
 
+    @Override
+    public String toString() {
+        return "CurrentTemperatureConditionsImpl{" +
+            "type=" + type +
+            ", temperature=" + temperature +
+            ", feelsLike=" + feelsLike +
+            ", maxTemperature=" + maxTemperature +
+            ", minTemperature=" + minTemperature +
+            '}';
+    }
 }

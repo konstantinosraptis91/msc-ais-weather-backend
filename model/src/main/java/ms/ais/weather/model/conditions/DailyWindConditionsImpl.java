@@ -46,4 +46,13 @@ public class DailyWindConditionsImpl
             return new DailyWindConditionsImpl(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "DailyWindConditionsImpl{" +
+            "type=" + type +
+            ", windSpeed=" + windSpeed +
+            ", windDirection=" + windDirection +
+            '}';
+    }
 }

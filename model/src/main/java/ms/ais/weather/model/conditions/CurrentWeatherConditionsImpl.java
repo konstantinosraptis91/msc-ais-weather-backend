@@ -56,4 +56,15 @@ public class CurrentWeatherConditionsImpl
         }
     }
 
+    @Override
+    public String toString() {
+        return "CurrentWeatherConditionsImpl{" +
+            "type=" + type +
+            ", main='" + main + '\'' +
+            ", description='" + description + '\'' +
+            ", cloudPercentage=" + cloudPercentage +
+            ", humidityPercentage=" + humidityPercentage +
+            ", rainProbability=" + rainProbability +
+            '}';
+    }
 }

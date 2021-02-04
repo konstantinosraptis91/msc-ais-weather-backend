@@ -48,4 +48,12 @@ public class CurrentWindConditionsImpl
 
     }
 
+    @Override
+    public String toString() {
+        return "CurrentWindConditionsImpl{" +
+            "type=" + type +
+            ", windSpeed=" + windSpeed +
+            ", windDirection=" + windDirection +
+            '}';
+    }
 }

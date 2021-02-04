@@ -5,7 +5,7 @@ import ms.ais.weather.model.conditions.enums.ConditionsType;
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 11/1/2021.
  */
-public class WeatherConditions extends Conditions {
+public abstract class WeatherConditions extends Conditions {
 
     protected final String main;
     protected final String description;

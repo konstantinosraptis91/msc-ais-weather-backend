@@ -45,4 +45,14 @@ public class DailyTemperatureConditionsImpl
         }
     }
 
+    @Override
+    public String toString() {
+        return "DailyTemperatureConditionsImpl{" +
+            "type=" + type +
+            ", temperature=" + temperature +
+            ", feelsLike=" + feelsLike +
+            ", maxTemperature=" + maxTemperature +
+            ", minTemperature=" + minTemperature +
+            '}';
+    }
 }

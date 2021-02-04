@@ -11,4 +11,6 @@ public interface GeocodingService {
 
     Optional<City> getCityByName(String name);
 
+    Optional<City> getCityByCurrentLocation();
+
 }

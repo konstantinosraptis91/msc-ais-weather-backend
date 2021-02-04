@@ -1,8 +1,25 @@
 plugins {
     java
+    `maven-publish`
+}
+
+group = "ms-ais.weather"
+version = "1.0"
+
+allprojects() {
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+            }
+        }
+    }
+
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
 }

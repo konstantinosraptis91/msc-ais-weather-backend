@@ -75,6 +75,8 @@ public class SqliteCityDao implements CityDao {
             LOGGER.error(e.getMessage());
         }
 
+        LOGGER.debug("Returning generated key: " + generatedKey);
+
         return generatedKey;
     }
 

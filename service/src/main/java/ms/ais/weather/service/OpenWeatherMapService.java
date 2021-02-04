@@ -218,6 +218,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
             if (generatedKey != -1) {
                 cityId = generatedKey;
+                city.setId(cityId);
             } else {
                 cityId = cityDao.findCityIdByNameOrAlias(city.getCityGeoPoint().getCityName())
                     .orElseThrow(() -> new NoSuchElementException(

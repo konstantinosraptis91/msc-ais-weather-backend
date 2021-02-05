@@ -17,6 +17,8 @@ public class DBCPDataSource {
         ds.setUrl("jdbc:sqlite:" + SystemUtils.getUserHome()
             + "/sqlite/db/ms-ais-weather-schema.db");
 //        ds.setUrl("jdbc:sqlite:" + SystemUtils.getUserHome()
+//            + "/sqlite/ms-ais-weather-schema.db");
+//        ds.setUrl("jdbc:sqlite:" + SystemUtils.getUserHome()
 //            + "/Documents/SqliteDB/ms-ais-weather-schema.db");
         // ds.setUsername("");
         // ds.setPassword("");

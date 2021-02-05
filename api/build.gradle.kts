@@ -12,3 +12,19 @@ dependencies {
 application {
     mainClass.set("ms.ais.weather.api.Application")
 }
+
+tasks.register<Jar>("uberJar") {
+    archiveClassifier.set("uber")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from(sourceSets.main.get().output)
+
+    manifest {
+        attributes(mapOf("Main-Class" to "ms.ais.weather.api.Application"))
+    }
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}

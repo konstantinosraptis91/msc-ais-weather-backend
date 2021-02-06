@@ -58,6 +58,32 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
     }
 
     /**
+     * Get current weather forecast for the location mapped to the given IP address, which contains:
+     * -current:
+     * --temperature conditions, weather conditions, wind conditions
+     *
+     * @return The weather forecast
+     */
+    @Override
+    public Optional<CurrentWeatherForecastResponse> getCurrentWeatherForecastResponseByIP(String ip) {
+
+        Optional<CurrentWeatherForecastResponse> oResponse = Optional.empty();
+
+        try {
+            City city = getCityByIP(ip)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city for the given ip: " + ip));
+
+            oResponse = getCurrentWeatherForecastResponse(city.getCityGeoPoint().getCityName());
+
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return oResponse;
+    }
+
+    /**
      * Get current weather forecast, which contains:
      * -current:
      * --temperature conditions, weather conditions, wind conditions
@@ -119,6 +145,32 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             City city = getCityByCurrentLocation()
                 .orElseThrow(() -> new NoSuchElementException(
                     "Error... Cannot find city for the current location."));
+
+            oResponse = getHourlyWeatherForecastResponse(city.getCityGeoPoint().getCityName());
+
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return oResponse;
+    }
+
+    /**
+     * Get hourly weather forecast for the next 2 days for the location mapped to the given IP address, which contains:
+     * -hourly:
+     * --temperature conditions, weather conditions
+     *
+     * @return The weather forecast
+     */
+    @Override
+    public Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponseByIP(String ip) {
+
+        Optional<HourlyWeatherForecastResponse> oResponse = Optional.empty();
+
+        try {
+            City city = getCityByIP(ip)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city for the given ip: " + ip));
 
             oResponse = getHourlyWeatherForecastResponse(city.getCityGeoPoint().getCityName());
 
@@ -193,6 +245,34 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             City city = getCityByCurrentLocation()
                 .orElseThrow(() -> new NoSuchElementException(
                     "Error... Cannot find city for the current location."));
+
+            oResponse = getDailyWeatherForecastResponse(city.getCityGeoPoint().getCityName());
+
+        } catch (NoSuchElementException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return oResponse;
+    }
+
+    /**
+     * Get daily weather forecast for the next 5 days for the location mapped to given IP address, which contains:
+     * -current:
+     * --temperature conditions
+     * -daily:
+     * --temperature conditions, weather conditions, wind conditions
+     *
+     * @return The weather forecast
+     */
+    @Override
+    public Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponseByIP(String ip) {
+
+        Optional<DailyWeatherForecastResponse> oResponse = Optional.empty();
+
+        try {
+            City city = getCityByIP(ip)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city for the given ip: " + ip));
 
             oResponse = getDailyWeatherForecastResponse(city.getCityGeoPoint().getCityName());
 
@@ -368,6 +448,40 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                     .setScheme("http")
                     .setHost("api.ipstack.com")
                     .setPath("/check")
+                    .setParameter("access_key", "8f0513df0cc0f66506cad2a187e485d6")
+                    .build());
+
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(City.class, new IPStackCityDeserializer());
+            mapper.registerModule(module);
+
+            city = mapper.readValue(task.call(), City.class);
+
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return Optional.ofNullable(city);
+    }
+
+    /**
+     * Try to find city for the location mapped to given IP address, by using ipstack API.
+     *
+     * @return The city
+     */
+    @Override
+    public Optional<City> getCityByIP(String ip) {
+
+        City city = null;
+
+        try {
+
+            GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
+                new URIBuilder()
+                    .setScheme("http")
+                    .setHost("api.ipstack.com")
+                    .setPath("/" + ip)
                     .setParameter("access_key", "8f0513df0cc0f66506cad2a187e485d6")
                     .build());
 

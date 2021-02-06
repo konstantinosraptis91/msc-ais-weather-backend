@@ -49,6 +49,22 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
+    public void testGetCurrentWeatherForecastByIP() throws Exception {
+
+        WeatherService service = ServiceFactory.createWeatherService();
+        CurrentWeatherForecastResponse response =
+            service.getCurrentWeatherForecastResponseByIP("94.65.15.200")
+                .orElseThrow();
+
+        Assertions.assertNotNull(response.getCity());
+        System.out.println(response.getCity());
+
+        Assertions.assertNotNull(response.getForecast());
+        System.out.println(response.getForecast());
+    }
+
+    @Disabled
+    @Test
     public void testGetHourlyWeatherForecastResponseForCurrentLocation() throws Exception {
 
         WeatherService service = ServiceFactory.createWeatherService();
@@ -72,6 +88,24 @@ public class OpenWeatherMapServiceTest {
         WeatherService service = ServiceFactory.createWeatherService();
         HourlyWeatherForecastResponse response =
             service.getHourlyWeatherForecastResponse("Paris")
+                .orElseThrow();
+
+        Assertions.assertNotNull(response.getCity());
+        System.out.println(response.getCity());
+
+        Assertions.assertFalse(response.getForecastList().isEmpty());
+        response
+            .getForecastList()
+            .forEach(System.out::println);
+    }
+
+    @Disabled
+    @Test
+    public void testGetHourlyWeatherForecastResponseByIP() throws Exception {
+
+        WeatherService service = ServiceFactory.createWeatherService();
+        HourlyWeatherForecastResponse response =
+            service.getHourlyWeatherForecastResponseByIP("94.65.15.200")
                 .orElseThrow();
 
         Assertions.assertNotNull(response.getCity());
@@ -109,6 +143,25 @@ public class OpenWeatherMapServiceTest {
         WeatherService service = ServiceFactory.createWeatherService();
         DailyWeatherForecastResponse response =
             service.getDailyWeatherForecastResponse("Paris")
+                .orElseThrow();
+
+        Assertions.assertNotNull(response.getCity());
+        System.out.println(response.getCity());
+
+        Assertions.assertFalse(response.getForecastList().isEmpty());
+        response
+            .getForecastList()
+            .forEach(System.out::println);
+
+    }
+
+    // @Disabled
+    @Test
+    public void testGetDailyWeatherForecastResponseByIP() throws Exception {
+
+        WeatherService service = ServiceFactory.createWeatherService();
+        DailyWeatherForecastResponse response =
+            service.getDailyWeatherForecastResponseByIP("94.65.15.200")
                 .orElseThrow();
 
         Assertions.assertNotNull(response.getCity());

@@ -9,7 +9,28 @@ import org.eclipse.jetty.http.HttpStatus;
  */
 public class ForecastController {
 
-    public static Handler getCurrentWeatherForecastResponse =
+    public static Handler getCurrentWeatherForecastResponseByIP =
+        ctx ->
+            ServiceFactory.createWeatherService()
+                .getCurrentWeatherForecastResponseByIP(ctx.ip())
+                .ifPresentOrElse(ctx::json,
+                    () -> ctx.status(HttpStatus.NOT_FOUND_404));
+
+    public static Handler getHourlyWeatherForecastResponseByIP =
+        ctx ->
+            ServiceFactory.createWeatherService()
+                .getHourlyWeatherForecastResponseByIP(ctx.ip())
+                .ifPresentOrElse(ctx::json,
+                    () -> ctx.status(HttpStatus.NOT_FOUND_404));
+
+    public static Handler getDailyWeatherForecastResponseByIP =
+        ctx ->
+            ServiceFactory.createWeatherService()
+                .getDailyWeatherForecastResponseByIP(ctx.ip())
+                .ifPresentOrElse(ctx::json,
+                    () -> ctx.status(HttpStatus.NOT_FOUND_404));
+
+    public static Handler getCurrentWeatherForecastResponseByCity =
         ctx ->
             ServiceFactory.createWeatherService()
                 .getCurrentWeatherForecastResponse(
@@ -17,7 +38,7 @@ public class ForecastController {
                 .ifPresentOrElse(ctx::json,
                     () -> ctx.status(HttpStatus.NOT_FOUND_404));
 
-    public static Handler getHourlyWeatherForecastResponse =
+    public static Handler getHourlyWeatherForecastResponseByCity =
         ctx ->
             ServiceFactory.createWeatherService()
                 .getHourlyWeatherForecastResponse(
@@ -25,7 +46,7 @@ public class ForecastController {
                 .ifPresentOrElse(ctx::json,
                     () -> ctx.status(HttpStatus.NOT_FOUND_404));
 
-    public static Handler getDailyWeatherForecastResponse =
+    public static Handler getDailyWeatherForecastResponseByCity =
         ctx ->
             ServiceFactory.createWeatherService()
                 .getDailyWeatherForecastResponse(

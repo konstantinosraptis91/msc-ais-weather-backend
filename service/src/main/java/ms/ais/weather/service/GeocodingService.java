@@ -13,4 +13,6 @@ public interface GeocodingService {
 
     Optional<City> getCityByCurrentLocation();
 
+    Optional<City> getCityByIP(String ip);
+
 }

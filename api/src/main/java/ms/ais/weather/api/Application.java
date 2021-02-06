@@ -20,9 +20,13 @@ public class Application {
         final String baseURL = "/ms/ais/api";
 
         app.get(baseURL, ctx -> ctx.result("Server Is Up and Running..."));
-        app.get(baseURL + "/forecast/current/city/:city", ForecastController.getCurrentWeatherForecastResponse);
-        app.get(baseURL + "/forecast/daily/city/:city", ForecastController.getDailyWeatherForecastResponse);
-        app.get(baseURL + "/forecast/hourly/city/:city", ForecastController.getHourlyWeatherForecastResponse);
+        app.get(baseURL + "/forecast/current", ForecastController.getCurrentWeatherForecastResponseByIP);
+        app.get(baseURL + "/forecast/daily", ForecastController.getDailyWeatherForecastResponseByIP);
+        app.get(baseURL + "/forecast/hourly", ForecastController.getHourlyWeatherForecastResponseByIP);
+
+        app.get(baseURL + "/forecast/current/city/:city", ForecastController.getCurrentWeatherForecastResponseByCity);
+        app.get(baseURL + "/forecast/daily/city/:city", ForecastController.getDailyWeatherForecastResponseByCity);
+        app.get(baseURL + "/forecast/hourly/city/:city", ForecastController.getHourlyWeatherForecastResponseByCity);
 
         app.post(baseURL + "/user/signup", UserController.signUpUser);
         app.get(baseURL + "/user/signin", UserController.signInUser);

@@ -17,6 +17,12 @@ public interface WeatherService {
 
     Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponse(String cityName);
 
+    Optional<CurrentWeatherForecastResponse> getCurrentWeatherForecastResponseByIP(String ip);
+
+    Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponseByIP(String ip);
+
+    Optional<DailyWeatherForecastResponse> getDailyWeatherForecastResponseByIP(String ip);
+
     Optional<CurrentWeatherForecastResponse> getCurrentWeatherForecastResponse();
 
     Optional<HourlyWeatherForecastResponse> getHourlyWeatherForecastResponse();

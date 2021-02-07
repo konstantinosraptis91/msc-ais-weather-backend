@@ -12,21 +12,21 @@ public class ForecastController {
     public static Handler getCurrentWeatherForecastResponseByIP =
         ctx ->
             ServiceFactory.createWeatherService()
-                .getCurrentWeatherForecastResponseByIP(ctx.ip())
+                .getCurrentWeatherForecastResponseByIP(ctx.header("x-forwarded-for"))
                 .ifPresentOrElse(ctx::json,
                     () -> ctx.status(HttpStatus.NOT_FOUND_404));
 
     public static Handler getHourlyWeatherForecastResponseByIP =
         ctx ->
             ServiceFactory.createWeatherService()
-                .getHourlyWeatherForecastResponseByIP(ctx.ip())
+                .getHourlyWeatherForecastResponseByIP(ctx.header("x-forwarded-for"))
                 .ifPresentOrElse(ctx::json,
                     () -> ctx.status(HttpStatus.NOT_FOUND_404));
 
     public static Handler getDailyWeatherForecastResponseByIP =
         ctx ->
             ServiceFactory.createWeatherService()
-                .getDailyWeatherForecastResponseByIP(ctx.ip())
+                .getDailyWeatherForecastResponseByIP(ctx.header("x-forwarded-for"))
                 .ifPresentOrElse(ctx::json,
                     () -> ctx.status(HttpStatus.NOT_FOUND_404));
 

@@ -26,7 +26,9 @@ public class DBCPDataSource {
             + "/" + confFileName;
 
         try {
-            final Config config = ConfigFactory.parseFile(new File(confFilePath)).resolve();
+            final Config config = ConfigFactory
+                .parseFile(new File(confFilePath))
+                .resolve();
             final String dbName = config.getConfig("sqlitedb").getString("dbName");
             final String dbPath = config.getConfig("sqlitedb").getString("dbPath");
 

@@ -12,20 +12,21 @@ import java.io.File;
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 7/12/2020.
  */
-public enum ServerConfig {
-    INSTANCE("server.conf");
+public class ServerConfig {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(ServerConfig.class);
-    private final Config CONFIG;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerConfig.class);
+    private static final Config SERVER_CONFIG;
 
-    ServerConfig(String confFileName) {
+    static {
+        final String confFileName = "server.conf";
         final String confFilePath = SystemUtils.getUserDir().getParentFile().getParent()
             + "/" + confFileName;
 
         try {
-            CONFIG = ConfigFactory
+            Config config = ConfigFactory
                 .parseFile(new File(confFilePath))
                 .resolve();
+            SERVER_CONFIG = config.getConfig("server");
         } catch (ConfigException e) {
             final String sqliteConfFileStructure = "server {" + System.lineSeparator()
                 + "\t port: the-port" + System.lineSeparator()
@@ -38,11 +39,11 @@ public enum ServerConfig {
         }
     }
 
-    public int getPort() {
-        return getServerConfig().getInt("port");
+    private ServerConfig() {
     }
 
-    private Config getServerConfig() {
-        return CONFIG.getConfig("server");
+    public static int getPort() {
+        return SERVER_CONFIG.getInt("port");
     }
+
 }

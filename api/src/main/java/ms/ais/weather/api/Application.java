@@ -17,7 +17,7 @@ public class Application {
         Javalin app = Javalin.create(JavalinConfig::enableCorsForAllOrigins)
             .start(ServerConfig.getPort());
 
-        final String baseURL = "/ms/ais/api";
+        final String baseURL = "/msc/ais/weather/api/";
 
         app.get(baseURL, ctx -> ctx.result("Server Is Up and Running..."));
         app.get(baseURL + "/forecast/current", ForecastController.getCurrentWeatherForecastResponseByIP);

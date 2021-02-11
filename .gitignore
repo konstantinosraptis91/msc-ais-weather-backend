@@ -10,6 +10,9 @@ out/
 
 buildSrc/.gradle
 
+api/all.log
+ms-ais-weather-schema.db
+
 # OS generated files #
 ######################
 .DS_Store

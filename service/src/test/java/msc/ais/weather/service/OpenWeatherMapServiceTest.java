@@ -4,6 +4,7 @@ import msc.ais.weather.model.location.City;
 import msc.ais.weather.model.response.CurrentWeatherForecastResponse;
 import msc.ais.weather.model.response.DailyWeatherForecastResponse;
 import msc.ais.weather.model.response.HourlyWeatherForecastResponse;
+import msc.ais.weather.service.conf.TestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,13 @@ import java.util.NoSuchElementException;
 public class OpenWeatherMapServiceTest {
 
     private final ServiceOptions OPTIONS = ServiceOptions.builder()
-        .openWeatherMapAPIKey("200681ee8b9be15aafc017130d88cd41")
-        .ipStackAPIKey("8f0513df0cc0f66506cad2a187e485d6")
+        .openWeatherMapAPIKey(TestConfig.getOpenWeatherMapAPIKey())
+        .ipStackAPIKey(TestConfig.getIPStackAPIKey())
         .build();
 
-    // @Disabled
+    @Disabled
     @Test
-    public void testGetCurrentWeatherForecastForCurrentLocation() throws Exception {
+    public void testGetCurrentWeatherForecastForCurrentLocation() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         CurrentWeatherForecastResponse response =
@@ -38,7 +39,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetCurrentWeatherForecast() throws Exception {
+    public void testGetCurrentWeatherForecast() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         CurrentWeatherForecastResponse response =
@@ -54,7 +55,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetCurrentWeatherForecastByIP() throws Exception {
+    public void testGetCurrentWeatherForecastByIP() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         CurrentWeatherForecastResponse response =
@@ -70,7 +71,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetHourlyWeatherForecastResponseForCurrentLocation() throws Exception {
+    public void testGetHourlyWeatherForecastResponseForCurrentLocation() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         HourlyWeatherForecastResponse response =
@@ -88,7 +89,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetHourlyWeatherForecastResponse() throws Exception {
+    public void testGetHourlyWeatherForecastResponse() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         HourlyWeatherForecastResponse response =
@@ -106,7 +107,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetHourlyWeatherForecastResponseByIP() throws Exception {
+    public void testGetHourlyWeatherForecastResponseByIP() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         HourlyWeatherForecastResponse response =
@@ -124,7 +125,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetDailyWeatherForecastResponseForCurrentLocation() throws Exception {
+    public void testGetDailyWeatherForecastResponseForCurrentLocation() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         DailyWeatherForecastResponse response =
@@ -143,7 +144,7 @@ public class OpenWeatherMapServiceTest {
 
     @Disabled
     @Test
-    public void testGetDailyWeatherForecastResponse() throws Exception {
+    public void testGetDailyWeatherForecastResponse() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         DailyWeatherForecastResponse response =
@@ -162,7 +163,7 @@ public class OpenWeatherMapServiceTest {
 
     // @Disabled
     @Test
-    public void testGetDailyWeatherForecastResponseByIP() throws Exception {
+    public void testGetDailyWeatherForecastResponseByIP() {
 
         WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         DailyWeatherForecastResponse response =

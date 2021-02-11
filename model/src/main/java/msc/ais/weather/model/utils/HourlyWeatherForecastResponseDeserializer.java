@@ -23,7 +23,8 @@ public class HourlyWeatherForecastResponseDeserializer extends JsonDeserializer<
 
     @Override
     public HourlyWeatherForecastResponse deserialize(JsonParser jsonParser,
-                                                     DeserializationContext context) throws IOException, JsonProcessingException {
+                                                     DeserializationContext context)
+        throws IOException {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode hourlyWeatherJsonRootObj = mapper.readTree(jsonParser);
@@ -46,18 +47,6 @@ public class HourlyWeatherForecastResponseDeserializer extends JsonDeserializer<
         response.getForecastList().addAll(forecastList);
         return response;
     }
-
-//    private CityGeoPoint extractCityGeoPoint(final JsonNode hourlyWeatherJsonRootObj) {
-//        double longitude = hourlyWeatherJsonRootObj.path("lon").asDouble();
-//        double latitude = hourlyWeatherJsonRootObj.path("lat").asDouble();
-//        String cityName = hourlyWeatherJsonRootObj.path("timezone").asText();
-//
-//        return CityGeoPoint.builder()
-//            .withLongitude(longitude)
-//            .withLatitude(latitude)
-//            .withCityName(cityName)
-//            .build();
-//    }
 
     private City extractCity(final JsonNode hourlyWeatherJsonRootObj) {
         double longitude = hourlyWeatherJsonRootObj.path("lon").asDouble();

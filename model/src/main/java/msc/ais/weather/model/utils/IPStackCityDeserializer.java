@@ -18,7 +18,8 @@ public class IPStackCityDeserializer extends JsonDeserializer<City> {
 
     @Override
     public City deserialize(JsonParser jsonParser,
-                            DeserializationContext context) throws IOException, JsonProcessingException {
+                            DeserializationContext context)
+        throws IOException {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode ipStackRootJsonObject = mapper.readTree(jsonParser);

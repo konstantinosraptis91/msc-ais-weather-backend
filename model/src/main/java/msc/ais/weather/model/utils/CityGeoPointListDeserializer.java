@@ -19,7 +19,9 @@ import java.util.List;
 public class CityGeoPointListDeserializer extends JsonDeserializer<List<CityGeoPoint>> {
 
     @Override
-    public List<CityGeoPoint> deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException {
+    public List<CityGeoPoint> deserialize(JsonParser jsonParser,
+                                          DeserializationContext context)
+        throws IOException {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode cityGeoPointJsonArray = mapper.readTree(jsonParser);

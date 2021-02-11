@@ -18,7 +18,9 @@ import java.util.Map;
 public class CityGeoPointMapDeserializer extends JsonDeserializer<Map<String, CityGeoPoint>> {
 
     @Override
-    public Map<String, CityGeoPoint> deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException {
+    public Map<String, CityGeoPoint> deserialize(JsonParser jsonParser,
+                                                 DeserializationContext context)
+        throws IOException {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode cityGeoPointJsonArray = mapper.readTree(jsonParser);

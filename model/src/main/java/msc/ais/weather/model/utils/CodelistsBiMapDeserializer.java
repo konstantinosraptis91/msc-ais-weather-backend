@@ -26,7 +26,8 @@ public class CodelistsBiMapDeserializer extends JsonDeserializer<BiMap<String, S
 
     @Override
     public BiMap<String, String> deserialize(JsonParser jsonParser,
-                                             DeserializationContext context) throws IOException, JsonProcessingException {
+                                             DeserializationContext context)
+        throws IOException {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode codelistMapJsonArray = mapper.readTree(jsonParser);

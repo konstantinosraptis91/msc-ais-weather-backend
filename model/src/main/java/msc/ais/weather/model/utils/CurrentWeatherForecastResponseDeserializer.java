@@ -1,7 +1,6 @@
 package msc.ais.weather.model.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,7 +21,8 @@ public class CurrentWeatherForecastResponseDeserializer extends JsonDeserializer
 
     @Override
     public CurrentWeatherForecastResponse deserialize(JsonParser jsonParser,
-                                                      DeserializationContext context) throws IOException, JsonProcessingException {
+                                                      DeserializationContext context)
+        throws IOException {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode currentWeatherJson = mapper.readTree(jsonParser);
@@ -42,18 +42,6 @@ public class CurrentWeatherForecastResponseDeserializer extends JsonDeserializer
     private long extractTimestamp(final JsonNode currentWeatherJson) {
         return currentWeatherJson.path("dt").asLong();
     }
-
-//    private CityGeoPoint extractCityGeoPoint(final JsonNode currentWeatherJson) {
-//        double longitude = currentWeatherJson.path("coord").path("lon").asDouble();
-//        double latitude = currentWeatherJson.path("coord").path("lat").asDouble();
-//        String cityName = currentWeatherJson.path("name").asText();
-//
-//        return CityGeoPoint.builder()
-//            .withLongitude(longitude)
-//            .withLatitude(latitude)
-//            .withCityName(cityName)
-//            .build();
-//    }
 
     private City extractCity(final JsonNode currentWeatherJson) {
         double longitude = currentWeatherJson.path("coord").path("lon").asDouble();

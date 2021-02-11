@@ -2,8 +2,8 @@ package msc.ais.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import msc.ais.weather.model.location.City;
 import msc.ais.weather.model.enums.WeatherForecastType;
+import msc.ais.weather.model.location.City;
 import msc.ais.weather.model.response.CurrentWeatherForecastResponse;
 import msc.ais.weather.model.response.DailyWeatherForecastResponse;
 import msc.ais.weather.model.response.HourlyWeatherForecastResponse;
@@ -27,6 +27,11 @@ import java.util.Optional;
 public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
+    private final ServiceOptions options;
+
+    OpenWeatherMapService (ServiceOptions options) {
+        this.options = options;
+    }
 
     /**
      * Get current weather forecast for the current location, which contains:
@@ -102,7 +107,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
                 OpenWeatherMapURI.builder()
                     .withCityName(city.getCityGeoPoint().getCityName())
-                    .withKey("200681ee8b9be15aafc017130d88cd41")
+                    .withKey(options.getOpenWeatherMapAPIKey())
                     .withUnitsType(UnitsType.METRIC)
                     .withWeatherForecastType(WeatherForecastType.CURRENT)
                     .build().getURI());
@@ -204,7 +209,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                 OpenWeatherMapURI.builder()
                     .longitude(city.getCityGeoPoint().getLongitude())
                     .latitude(city.getCityGeoPoint().getLatitude())
-                    .withKey("200681ee8b9be15aafc017130d88cd41")
+                    .withKey(options.getOpenWeatherMapAPIKey())
                     .withUnitsType(UnitsType.METRIC)
                     .withWeatherForecastType(WeatherForecastType.HOURLY)
                     .build().getURI());
@@ -311,7 +316,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                 OpenWeatherMapURI.builder()
                     .longitude(city.getCityGeoPoint().getLongitude())
                     .latitude(city.getCityGeoPoint().getLatitude())
-                    .withKey("200681ee8b9be15aafc017130d88cd41")
+                    .withKey(options.getOpenWeatherMapAPIKey())
                     .withUnitsType(UnitsType.METRIC)
                     .withWeatherForecastType(WeatherForecastType.DAILY)
                     .build().getURI());
@@ -365,7 +370,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                     .setHost("api.openweathermap.org/geo/1.0")
                     .setPath("/direct")
                     .setParameter("q", cityName)
-                    .setParameter("appid", "200681ee8b9be15aafc017130d88cd41")
+                    .setParameter("appid", options.getOpenWeatherMapAPIKey())
                     .setParameter("limit", "1").build());
 
             ObjectMapper mapper = new ObjectMapper();
@@ -423,7 +428,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                     .setScheme("http")
                     .setHost("api.ipstack.com")
                     .setPath("/check")
-                    .setParameter("access_key", "8f0513df0cc0f66506cad2a187e485d6")
+                    .setParameter("access_key", options.getIpStackAPIKey())
                     .build());
 
             ObjectMapper mapper = new ObjectMapper();
@@ -457,7 +462,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                     .setScheme("http")
                     .setHost("api.ipstack.com")
                     .setPath("/" + ip)
-                    .setParameter("access_key", "8f0513df0cc0f66506cad2a187e485d6")
+                    .setParameter("access_key", options.getIpStackAPIKey())
                     .build());
 
             ObjectMapper mapper = new ObjectMapper();

@@ -15,11 +15,16 @@ import java.util.NoSuchElementException;
  */
 public class OpenWeatherMapServiceTest {
 
+    private final ServiceOptions OPTIONS = ServiceOptions.builder()
+        .openWeatherMapAPIKey("200681ee8b9be15aafc017130d88cd41")
+        .ipStackAPIKey("8f0513df0cc0f66506cad2a187e485d6")
+        .build();
+
     @Disabled
     @Test
     public void testGetCurrentWeatherForecastForCurrentLocation() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         CurrentWeatherForecastResponse response =
             service.getCurrentWeatherForecastResponse()
                 .orElseThrow();
@@ -35,7 +40,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetCurrentWeatherForecast() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         CurrentWeatherForecastResponse response =
             service.getCurrentWeatherForecastResponse("Paris")
                 .orElseThrow();
@@ -51,7 +56,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetCurrentWeatherForecastByIP() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         CurrentWeatherForecastResponse response =
             service.getCurrentWeatherForecastResponseByIP("94.65.15.200")
                 .orElseThrow();
@@ -67,7 +72,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetHourlyWeatherForecastResponseForCurrentLocation() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         HourlyWeatherForecastResponse response =
             service.getHourlyWeatherForecastResponse()
                 .orElseThrow();
@@ -85,7 +90,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetHourlyWeatherForecastResponse() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         HourlyWeatherForecastResponse response =
             service.getHourlyWeatherForecastResponse("Paris")
                 .orElseThrow();
@@ -103,7 +108,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetHourlyWeatherForecastResponseByIP() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         HourlyWeatherForecastResponse response =
             service.getHourlyWeatherForecastResponseByIP("94.65.15.200")
                 .orElseThrow();
@@ -121,7 +126,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetDailyWeatherForecastResponseForCurrentLocation() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         DailyWeatherForecastResponse response =
             service.getDailyWeatherForecastResponse()
                 .orElseThrow();
@@ -140,7 +145,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetDailyWeatherForecastResponse() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         DailyWeatherForecastResponse response =
             service.getDailyWeatherForecastResponse("Paris")
                 .orElseThrow();
@@ -159,7 +164,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetDailyWeatherForecastResponseByIP() throws Exception {
 
-        WeatherService service = ServiceFactory.createWeatherService();
+        WeatherService service = ServiceFactory.createOpenWeatherMapWeatherService(OPTIONS);
         DailyWeatherForecastResponse response =
             service.getDailyWeatherForecastResponseByIP("94.65.15.200")
                 .orElseThrow();
@@ -180,7 +185,7 @@ public class OpenWeatherMapServiceTest {
 
         final String cityName = "Pallini";
 
-        GeocodingService service = ServiceFactory.createGeocodingService();
+        GeocodingService service = ServiceFactory.createOpenWeatherMapGeocodingService(OPTIONS);
         City city = service.getCityByName(cityName)
             .orElseThrow(() -> new NoSuchElementException(
                 "Error from test... Cannot find city with name: " + cityName));
@@ -193,7 +198,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testGetCityByCurrentLocation() {
 
-        GeocodingService service = ServiceFactory.createGeocodingService();
+        GeocodingService service = ServiceFactory.createOpenWeatherMapGeocodingService(OPTIONS);
         City city = service.getCityByCurrentLocation()
             .orElseThrow(() -> new NoSuchElementException(
                 "Error from test... Cannot find city based on current location."));
@@ -206,7 +211,7 @@ public class OpenWeatherMapServiceTest {
     @Test
     public void testCombineGeoServices() {
 
-        GeocodingService service = ServiceFactory.createGeocodingService();
+        GeocodingService service = ServiceFactory.createOpenWeatherMapGeocodingService(OPTIONS);
         City city1 = service.getCityByCurrentLocation()
             .orElseThrow(() -> new NoSuchElementException(
                 "Error from test... Cannot find city based on current location."));

@@ -5,12 +5,12 @@ package msc.ais.weather.service;
  */
 public class ServiceFactory {
 
-    public static WeatherService createWeatherService() {
-        return new OpenWeatherMapService();
+    public static WeatherService createOpenWeatherMapWeatherService(ServiceOptions options) {
+        return new OpenWeatherMapService(options);
     }
 
-    public static GeocodingService createGeocodingService() {
-        return new OpenWeatherMapService();
+    public static GeocodingService createOpenWeatherMapGeocodingService(ServiceOptions options) {
+        return new OpenWeatherMapService(options);
     }
 
 }

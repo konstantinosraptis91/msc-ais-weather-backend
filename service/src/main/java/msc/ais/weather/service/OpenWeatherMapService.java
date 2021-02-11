@@ -29,7 +29,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenWeatherMapService.class);
     private final ServiceOptions options;
 
-    OpenWeatherMapService (ServiceOptions options) {
+    OpenWeatherMapService(ServiceOptions options) {
         this.options = options;
     }
 
@@ -121,9 +121,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, CurrentWeatherForecastResponse.class);
             // finalize city
-//            response.getCity().setId(city.getId());
-//            response.getCity().setCountry(city.getCountry());
-//            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
+            response.getCity().setCountry(city.getCountry());
+            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -222,9 +221,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, HourlyWeatherForecastResponse.class);
             // finalize city
-//            response.getCity().setId(city.getId());
-//            response.getCity().setCountry(city.getCountry());
-//            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
+            response.getCity().setCountry(city.getCountry());
+            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -339,9 +337,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, DailyWeatherForecastResponse.class);
             // finalize city
-//            response.getCity().setId(city.getId());
-//            response.getCity().setCountry(city.getCountry());
-//            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
+            response.getCity().setCountry(city.getCountry());
+            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);

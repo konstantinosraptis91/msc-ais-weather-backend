@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 29/1/2021.
  */
 @JsonPropertyOrder({
-    "cityGeoPoint", "id", "country"
+    "cityGeoPoint", "country"
 })
 public class City {
 

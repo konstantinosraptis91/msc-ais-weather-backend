@@ -20,7 +20,7 @@ public class OpenWeatherMapServiceTest {
         .ipStackAPIKey("8f0513df0cc0f66506cad2a187e485d6")
         .build();
 
-    @Disabled
+    // @Disabled
     @Test
     public void testGetCurrentWeatherForecastForCurrentLocation() throws Exception {
 

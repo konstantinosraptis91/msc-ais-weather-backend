@@ -2,16 +2,13 @@ package ms.ais.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import ms.ais.weather.db.AliasDao;
-import ms.ais.weather.db.CityDao;
-import ms.ais.weather.db.DaoFactory;
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 import ms.ais.weather.model.enums.WeatherForecastType;
 import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
 import ms.ais.weather.model.response.DailyWeatherForecastResponse;
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
 import ms.ais.weather.model.utils.*;
-import ms.ais.weather.service.cache.OpenWeatherMapCache;
+import ms.ais.weather.service.cache.ServiceCache;
 import ms.ais.weather.service.enums.UnitsType;
 import ms.ais.weather.service.tasks.GetFromOpenWeatherMapTask;
 import ms.ais.weather.service.tasks.OpenWeatherMapURI;
@@ -97,7 +94,10 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         CurrentWeatherForecastResponse response = null;
 
         try {
-            City city = findCityByNameOrThrowException(cityName);
+            City city = getCityByName(cityName)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city : " + cityName
+                        + " neither in cache, nor in OpenWeatherMap API."));
 
             GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
                 OpenWeatherMapURI.builder()
@@ -116,9 +116,9 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, CurrentWeatherForecastResponse.class);
             // finalize city
-            response.getCity().setId(city.getId());
-            response.getCity().setCountry(city.getCountry());
-            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
+//            response.getCity().setId(city.getId());
+//            response.getCity().setCountry(city.getCountry());
+//            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -195,7 +195,10 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         HourlyWeatherForecastResponse response = null;
 
         try {
-            City city = findCityByNameOrThrowException(cityName);
+            City city = getCityByName(cityName)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city : " + cityName
+                        + " neither in cache, nor in OpenWeatherMap API."));
 
             GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
                 OpenWeatherMapURI.builder()
@@ -214,9 +217,9 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, HourlyWeatherForecastResponse.class);
             // finalize city
-            response.getCity().setId(city.getId());
-            response.getCity().setCountry(city.getCountry());
-            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
+//            response.getCity().setId(city.getId());
+//            response.getCity().setCountry(city.getCountry());
+//            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -299,7 +302,10 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         DailyWeatherForecastResponse response = null;
 
         try {
-            City city = findCityByNameOrThrowException(cityName);
+            City city = getCityByName(cityName)
+                .orElseThrow(() -> new NoSuchElementException(
+                    "Error... Cannot find city : " + cityName
+                        + " neither in cache, nor in OpenWeatherMap API."));
 
             GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
                 OpenWeatherMapURI.builder()
@@ -328,9 +334,9 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
             response = mapper.readValue(jsonString, DailyWeatherForecastResponse.class);
             // finalize city
-            response.getCity().setId(city.getId());
-            response.getCity().setCountry(city.getCountry());
-            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
+//            response.getCity().setId(city.getId());
+//            response.getCity().setCountry(city.getCountry());
+//            response.getCity().getCityGeoPoint().setCityName(city.getCityGeoPoint().getCityName());
 
         } catch (IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
@@ -342,13 +348,13 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
     }
 
     /**
-     * Get city by name or alias from openWeatherMap API.
+     * Get city by name from openWeatherMap API.
      *
-     * @param nameOrAlias The city name
+     * @param cityName The city name
      * @return The city
      */
     @Override
-    public Optional<City> getCityByName(String nameOrAlias) {
+    public Optional<City> getCityByName(String cityName) {
 
         City city = null;
 
@@ -358,7 +364,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
                     .setScheme("https")
                     .setHost("api.openweathermap.org/geo/1.0")
                     .setPath("/direct")
-                    .setParameter("q", nameOrAlias)
+                    .setParameter("q", cityName)
                     .setParameter("appid", "200681ee8b9be15aafc017130d88cd41")
                     .setParameter("limit", "1").build());
 
@@ -367,27 +373,10 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             module.addDeserializer(City.class, new GeocodingCityDeserializer());
             mapper.registerModule(module);
 
-            city = mapper.readValue(task.call(), City.class);
+            String jsonString = getJsonStringFromCacheOrPerformAPICall(task);
+            city = mapper.readValue(jsonString, City.class);
 
-            CityDao cityDao = DaoFactory.createCityDao();
-            int generatedKey = cityDao.insertCity(city);
-            int cityId;
 
-            if (generatedKey != -1) {
-                cityId = generatedKey;
-                city.setId(cityId);
-            } else {
-                cityId = cityDao.findCityIdByNameOrAlias(city.getCityGeoPoint().getCityName())
-                    .orElseThrow(() -> new NoSuchElementException(
-                        "Cannot find city: " + nameOrAlias + " in db (city_name or alias_name)."));
-            }
-
-            // If city name taken from API not equal with given name, create an alias
-            if (!city.getCityGeoPoint().getCityName().equals(nameOrAlias)) {
-                LOGGER.debug("Adding an alias for " + city.getCityGeoPoint().getCityName() + " -> " + nameOrAlias);
-                AliasDao aliasDao = DaoFactory.createAliasDao();
-                aliasDao.insertAlias(cityId, nameOrAlias);
-            }
         } catch (URISyntaxException | IOException | InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (NoSuchElementException e) {
@@ -397,38 +386,24 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         return Optional.ofNullable(city);
     }
 
-
     private String getJsonStringFromCacheOrPerformAPICall(GetFromOpenWeatherMapTask task)
         throws IOException, InterruptedException {
 
         String jsonString;
 
-        if (OpenWeatherMapCache.INSTANCE.getCache().containsKey(task.getURI().toString())) {
+        if (ServiceCache.OPEN_WEATHER_MAP_CACHE.getCache().containsKey(task.getURI().toString())) {
             LOGGER.debug("Call: [" + task.getURI().toString() + "] found and serving from cache!!!");
-            jsonString = OpenWeatherMapCache.INSTANCE.getCache().get(task.getURI().toString());
+            jsonString = ServiceCache.OPEN_WEATHER_MAP_CACHE.getCache().get(task.getURI().toString());
         } else {
             LOGGER.debug("Call: [" + task.getURI().toString()
                 + "] not found in cache, performing a call to openWeatherMap API.");
             jsonString = task.call();
             LOGGER.debug("Storing... Call: [" + task.getURI().toString() + "] in cache.");
-            OpenWeatherMapCache.INSTANCE.getCache().put(task.getURI().toString(), jsonString);
+            ServiceCache.OPEN_WEATHER_MAP_CACHE.getCache().put(task.getURI().toString(), jsonString);
             LOGGER.debug("Call: [" + task.getURI().toString() + "] stored successfully in cache!!!");
         }
 
         return jsonString;
-    }
-
-    /**
-     * Try to find city in db or get it from openWeatherMap API.
-     *
-     * @param name The city name
-     * @return The city
-     */
-    private synchronized City findCityByNameOrThrowException(String name) {
-        return ServiceFactory.createCityService()
-            .findCityByName(name)
-            .orElseThrow(() -> new NoSuchElementException(
-                "Error... Cannot find city : " + name + " neither in db, nor in OpenWeatherMap API."));
     }
 
     /**

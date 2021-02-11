@@ -1,6 +1,6 @@
 package ms.ais.weather.service;
 
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
 import ms.ais.weather.model.response.DailyWeatherForecastResponse;
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
@@ -202,6 +202,7 @@ public class OpenWeatherMapServiceTest {
         System.out.println(city);
     }
 
+    @Disabled
     @Test
     public void testCombineGeoServices() {
 

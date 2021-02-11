@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ms.ais.weather.model.HourlyWeatherForecast;
 import ms.ais.weather.model.conditions.*;
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 import ms.ais.weather.model.response.HourlyWeatherForecastResponse;
 

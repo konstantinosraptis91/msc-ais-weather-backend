@@ -12,23 +12,23 @@ import java.time.Duration;
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 2/2/2021.
  */
-public enum OpenWeatherMapCache {
+public enum ServiceCache {
 
-    INSTANCE;
+    OPEN_WEATHER_MAP_CACHE("OpenWeatherMapCache");
 
     private final Cache<String, String> cache;
 
-    OpenWeatherMapCache() {
+    ServiceCache(String cacheName) {
         CacheManager cacheManager = CacheManagerBuilder
             .newCacheManagerBuilder()
-            .withCache("OpenWeatherMapCache",
+            .withCache(cacheName,
                 CacheConfigurationBuilder.newCacheConfigurationBuilder(
                     String.class, String.class, ResourcePoolsBuilder.heap(1000))
                     .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofHours(1)))
             )
             .build();
         cacheManager.init();
-        cache = cacheManager.getCache("OpenWeatherMapCache", String.class, String.class);
+        cache = cacheManager.getCache(cacheName, String.class, String.class);
     }
 
     public Cache<String, String> getCache() {

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 
 import java.io.IOException;

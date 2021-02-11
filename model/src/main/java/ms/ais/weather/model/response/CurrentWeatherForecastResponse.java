@@ -2,7 +2,7 @@ package ms.ais.weather.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ms.ais.weather.model.CurrentWeatherForecast;
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 23/1/2021.

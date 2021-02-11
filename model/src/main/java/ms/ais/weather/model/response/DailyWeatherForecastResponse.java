@@ -3,8 +3,7 @@ package ms.ais.weather.model.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ms.ais.weather.model.DailyWeatherForecast;
 import ms.ais.weather.model.conditions.CurrentTemperatureConditions;
-import ms.ais.weather.model.db.City;
-import ms.ais.weather.model.location.CityGeoPoint;
+import ms.ais.weather.model.location.City;
 
 import java.util.ArrayList;
 import java.util.List;

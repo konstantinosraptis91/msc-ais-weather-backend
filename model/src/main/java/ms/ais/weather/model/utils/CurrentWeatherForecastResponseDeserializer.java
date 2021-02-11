@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ms.ais.weather.model.CurrentWeatherForecast;
 import ms.ais.weather.model.conditions.*;
 import ms.ais.weather.model.conditions.utils.WindDirectionUtils;
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 import ms.ais.weather.model.location.CityGeoPoint;
 import ms.ais.weather.model.response.CurrentWeatherForecastResponse;
 

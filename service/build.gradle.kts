@@ -7,7 +7,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "ms.ais.weather"
             artifactId = "service"
-            version = "1.0.0"
+            version = "1.0.1"
 
             from(components["java"])
         }
@@ -16,7 +16,6 @@ publishing {
 
 dependencies {
     implementation(project(":model"))
-    implementation(project(":db"))
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("org.ehcache:ehcache:3.8.1")
 }

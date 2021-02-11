@@ -13,16 +13,4 @@ public class ServiceFactory {
         return new OpenWeatherMapService();
     }
 
-    public static UserService createUserService() {
-        return new UserServiceImpl();
-    }
-
-    public static CityService createCityService() {
-        return new CityServiceImpl();
-    }
-
-    public static UserCityService createUserCityService() {
-        return new UserCityServiceImpl();
-    }
-
 }

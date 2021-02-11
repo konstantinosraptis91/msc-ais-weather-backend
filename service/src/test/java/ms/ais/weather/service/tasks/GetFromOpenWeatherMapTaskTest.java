@@ -21,7 +21,7 @@ public class GetFromOpenWeatherMapTaskTest {
                 .withWeatherForecastType(WeatherForecastType.DAILY)
                 .build().getURI());
 
-        // task.getOpenWeatherMapURI().printURI();
+        // System.out.println(task.getURI().toString());
 
         ObjectMapper mapper = new ObjectMapper();
         Object prettyObj = mapper.readValue(task.call(), Object.class);

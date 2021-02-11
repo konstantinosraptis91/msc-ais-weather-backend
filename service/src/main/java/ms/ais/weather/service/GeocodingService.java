@@ -1,6 +1,6 @@
 package ms.ais.weather.service;
 
-import ms.ais.weather.model.db.City;
+import ms.ais.weather.model.location.City;
 
 import java.util.Optional;
 

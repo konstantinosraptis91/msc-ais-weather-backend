@@ -19,4 +19,5 @@ dependencies {
     implementation(project(":db"))
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("org.ehcache:ehcache:3.8.1")
+    testImplementation("com.github.tomakehurst:wiremock:2.27.2")
 }

@@ -23,6 +23,7 @@ import java.util.Optional;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 19/1/2021.
+ * @author Steve Labrinos [stalab at linuxmail.org] on 13/2/2021.
  */
 public class OpenWeatherMapService implements WeatherService, GeocodingService {
 
@@ -267,7 +268,7 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
      * --temperature conditions
      * -daily:
      * --temperature conditions, weather conditions, wind conditions
-     *
+     * @param ip Users location ip
      * @return The weather forecast
      */
     @Override

@@ -11,6 +11,7 @@ import java.time.Duration;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 2/2/2021.
+ * @author Steve Labrinos [stalab at linuxmail.org] on 13/2/2021.
  */
 public enum ServiceCache {
 

@@ -15,7 +15,7 @@ public class Application {
 
     public static void main(String[] args) {
         Javalin app = Javalin.create(JavalinConfig::enableCorsForAllOrigins)
-            .start(ServerConfig.INSTANCE.getPort());
+            .start(ServerConfig.getPort());
 
         final String baseURL = "/msc/ais/weather/api/";
 

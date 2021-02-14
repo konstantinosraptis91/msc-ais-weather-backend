@@ -16,6 +16,7 @@ import java.io.IOException;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 19/1/2021.
+ * @author Steve Labrinos [stalab at linuxmail.org] on 13/2/2021.
  */
 public class CurrentWeatherForecastResponseDeserializer extends JsonDeserializer<CurrentWeatherForecastResponse> {
 

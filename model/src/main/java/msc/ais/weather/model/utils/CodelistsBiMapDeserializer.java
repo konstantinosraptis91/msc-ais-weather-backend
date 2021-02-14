@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 2/2/2021.
+ * @author Steve Labrinos [stalab at linuxmail.org] on 13/2/2021.
  */
 public class CodelistsBiMapDeserializer extends JsonDeserializer<BiMap<String, String>> {
 

@@ -4,6 +4,7 @@ import msc.ais.weather.model.conditions.enums.WindDirection;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 25/1/2021.
+ * @author Steve Labrinos [stalab at linuxmail.org] on 13/2/2021.
  */
 public class CurrentWindConditionsImpl
     extends WindConditions

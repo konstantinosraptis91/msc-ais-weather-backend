@@ -34,8 +34,10 @@ public class OpenWeatherMapURI {
         this.weatherForecastType = builder.weatherForecastType;
 
         URIBuilder uriBuilder = new URIBuilder()
-            .setScheme("https")
-            .setHost("api.openweathermap.org/data/2.5");
+            // .setScheme("https")
+            // .setHost("api.openweathermap.org/data/2.5");
+            .setScheme("http")
+            .setHost("localhost:9000");
         applyPath(uriBuilder);
         applyParameters(uriBuilder);
 

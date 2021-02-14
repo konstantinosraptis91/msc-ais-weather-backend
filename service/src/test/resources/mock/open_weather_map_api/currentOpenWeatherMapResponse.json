@@ -1,0 +1,43 @@
+{
+  "coord": {
+    "lon": 23.8772,
+    "lat": 37.997
+  },
+  "weather": [
+    {
+      "id": 804,
+      "main": "Clouds",
+      "description": "overcast clouds",
+      "icon": "04d"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 5.39,
+    "feels_like": -3.78,
+    "temp_min": 2.78,
+    "temp_max": 7.22,
+    "pressure": 1017,
+    "humidity": 81
+  },
+  "visibility": 9000,
+  "wind": {
+    "speed": 10.8,
+    "deg": 20
+  },
+  "clouds": {
+    "all": 90
+  },
+  "dt": 1613299632,
+  "sys": {
+    "type": 1,
+    "id": 6612,
+    "country": "GR",
+    "sunrise": 1613279751,
+    "sunset": 1613318503
+  },
+  "timezone": 7200,
+  "id": 255971,
+  "name": "Pallini",
+  "cod": 200
+}

@@ -1,0 +1,30 @@
+{
+  "ip": "94.64.202.9",
+  "type": "ipv4",
+  "continent_code": "EU",
+  "continent_name": "Europe",
+  "country_code": "GR",
+  "country_name": "Greece",
+  "region_code": "I",
+  "region_name": "Attica",
+  "city": "Gérakas",
+  "zip": "153 44",
+  "latitude": 38.0099983215332,
+  "longitude": 23.850000381469727,
+  "location": {
+    "geoname_id": 8201845,
+    "capital": "Athens",
+    "languages": [
+      {
+        "code": "el",
+        "name": "Greek",
+        "native": "Ελληνικά"
+      }
+    ],
+    "country_flag": "http://assets.ipstack.com/flags/gr.svg",
+    "country_flag_emoji": "🇬🇷",
+    "country_flag_emoji_unicode": "U+1F1EC U+1F1F7",
+    "calling_code": "30",
+    "is_eu": true
+  }
+}

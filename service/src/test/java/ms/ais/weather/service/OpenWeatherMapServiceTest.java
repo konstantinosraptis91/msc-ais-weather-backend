@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
  */
 public class OpenWeatherMapServiceTest {
 
-    @Disabled
+    // @Disabled
     @Test
     public void testGetCurrentWeatherForecastForCurrentLocation() throws Exception {
 

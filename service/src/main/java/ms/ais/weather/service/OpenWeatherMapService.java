@@ -355,8 +355,10 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
         try {
             GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
                 new URIBuilder()
-                    .setScheme("https")
-                    .setHost("api.openweathermap.org/geo/1.0")
+                    // .setScheme("https")
+                    // .setHost("api.openweathermap.org/geo/1.0")
+                    .setScheme("http")
+                    .setHost("localhost:9000")
                     .setPath("/direct")
                     .setParameter("q", nameOrAlias)
                     .setParameter("appid", "200681ee8b9be15aafc017130d88cd41")
@@ -446,7 +448,8 @@ public class OpenWeatherMapService implements WeatherService, GeocodingService {
             GetFromOpenWeatherMapTask task = GetFromOpenWeatherMapTask.createWithURI(
                 new URIBuilder()
                     .setScheme("http")
-                    .setHost("api.ipstack.com")
+                    // .setHost("api.ipstack.com")
+                    .setHost("localhost:9000")
                     .setPath("/check")
                     .setParameter("access_key", "8f0513df0cc0f66506cad2a187e485d6")
                     .build());

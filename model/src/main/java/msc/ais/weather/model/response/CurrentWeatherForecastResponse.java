@@ -6,6 +6,7 @@ import msc.ais.weather.model.location.City;
 
 /**
  * @author Konstantinos Raptis [kraptis at unipi.gr] on 23/1/2021.
+ * @author Steve Labrinos [stalab at linuxmail.org] on 13/2/2021.
  */
 public class CurrentWeatherForecastResponse {
 

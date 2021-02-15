@@ -1,5 +1,5 @@
 plugins {
-    id("ms.ais.weather.java-application-conventions")
+    id("msc.ais.weather.java-application-conventions")
 }
 
 dependencies {
@@ -9,17 +9,17 @@ dependencies {
 }
 
 application {
-    mainClass.set("ms.ais.weather.api.Application")
+    mainClass.set("msc.ais.weather.api.Application")
 }
 
 tasks.register<Jar>("uberJar") {
-    archiveClassifier.set("uber")
+    archiveClassifier.set("msc-ais-weather-1.0.1")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from(sourceSets.main.get().output)
 
     manifest {
-        attributes(mapOf("Main-Class" to "ms.ais.weather.api.Application"))
+        attributes(mapOf("Main-Class" to "msc.ais.weather.api.Application"))
     }
 
     dependsOn(configurations.runtimeClasspath)

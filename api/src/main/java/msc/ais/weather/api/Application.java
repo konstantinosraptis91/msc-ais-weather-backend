@@ -9,7 +9,7 @@ import msc.ais.weather.api.controller.CityController;
 import msc.ais.weather.api.controller.ForecastController;
 import msc.ais.weather.api.controller.UserCityController;
 import msc.ais.weather.api.controller.UserController;
-import msc.ais.weather.api.enums.ServerConfig;
+import msc.ais.weather.api.conf.ServerConfig;
 
 public class Application {
 

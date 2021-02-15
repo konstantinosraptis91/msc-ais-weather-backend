@@ -13,7 +13,7 @@ application {
 }
 
 tasks.register<Jar>("uberJar") {
-    archiveClassifier.set("uber")
+    archiveClassifier.set("msc-ais-weather-1.0.1")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from(sourceSets.main.get().output)

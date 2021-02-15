@@ -1,5 +1,5 @@
 plugins {
-    id("ms.ais.weather.java-application-conventions")
+    id("msc.ais.weather.java-application-conventions")
 }
 
 dependencies {
@@ -9,7 +9,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("ms.ais.weather.api.Application")
+    mainClass.set("msc.ais.weather.api.Application")
 }
 
 tasks.register<Jar>("uberJar") {
@@ -19,7 +19,7 @@ tasks.register<Jar>("uberJar") {
     from(sourceSets.main.get().output)
 
     manifest {
-        attributes(mapOf("Main-Class" to "ms.ais.weather.api.Application"))
+        attributes(mapOf("Main-Class" to "msc.ais.weather.api.Application"))
     }
 
     dependsOn(configurations.runtimeClasspath)

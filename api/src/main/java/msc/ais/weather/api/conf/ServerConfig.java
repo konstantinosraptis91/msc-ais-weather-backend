@@ -1,4 +1,4 @@
-package msc.ais.weather.api.enums;
+package msc.ais.weather.api.conf;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;

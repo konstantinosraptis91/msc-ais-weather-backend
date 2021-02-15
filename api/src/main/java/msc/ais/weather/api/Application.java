@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.core.JavalinConfig;
 import io.javalin.plugin.json.JavalinJackson;
+import msc.ais.weather.api.conf.ServerConfig;
 import msc.ais.weather.api.controller.CityController;
 import msc.ais.weather.api.controller.ForecastController;
 import msc.ais.weather.api.controller.UserCityController;
 import msc.ais.weather.api.controller.UserController;
-import msc.ais.weather.api.conf.ServerConfig;
 
 public class Application {
 

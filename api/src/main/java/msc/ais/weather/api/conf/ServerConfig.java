@@ -19,7 +19,9 @@ public class ServerConfig {
 
     static {
         final String confFileName = "server.conf";
-        final String confFilePath = SystemUtils.getUserDir().getParentFile().getParent()
+        final String confFilePath =
+            // SystemUtils.getUserDir().getParentFile().getParent()
+            "/conf"
             + "/" + confFileName;
 
         try {

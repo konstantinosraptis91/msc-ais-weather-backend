@@ -22,7 +22,9 @@ public class DBCPDataSource {
 
     static {
         final String confFileName = "sqlite.conf";
-        final String confFilePath = SystemUtils.getUserDir().getParentFile().getParent()
+        final String confFilePath =
+            // SystemUtils.getUserDir().getParentFile().getParent()
+            "/conf"
             + "/" + confFileName;
 
         try {
